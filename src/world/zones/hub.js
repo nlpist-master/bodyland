@@ -126,6 +126,7 @@ export function build(ctx) {
     const info = ZONE_INFO[id];
     portals.push(S.portal(ctx, {
       x: sx * RING, z: cz * RING, rotY: a + Math.PI, color: info.color, bg: info.bg, label: info.short,
+      to: id,
       onEnter: () => game.travel(id),
     }));
     spawns[id] = { x: sx * (RING - 3.5), y: 0, z: cz * (RING - 3.5), yaw: a + Math.PI };

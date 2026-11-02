@@ -8,6 +8,7 @@ import * as construction from './zones/construction.js';
 import * as jungle from './zones/jungle.js';
 import * as water from './zones/water.js';
 import * as life from './zones/life.js';
+import { MISSIONS } from '../missions/index.js';
 
 // Loads one zone at a time into the scene and frees it on leave.
 // Every zone is generated from code that is already downloaded,
@@ -28,10 +29,12 @@ export class WorldManager {
 
   load(id) {
     this.unload();
-    const { engine, collision, interactions, audio, progress, npcs } = this.game;
+    const { engine, collision, interactions, audio, progress, npcs, pickups, challenge } = this.game;
+    challenge.clear();
     collision.clear();
     interactions.clear();
     npcs.clear();
+    pickups.clear();
     this.root = new THREE.Group();
     this.root.name = 'zone:' + id;
     engine.scene.add(this.root);
@@ -42,14 +45,22 @@ export class WorldManager {
       collision,
       interactions,
       npcs,
+      pickups,
       audio,
+      portals: [],
+      markers: [],
       save: progress.data,
       tween: (duration, fn, done) => this.tween(duration, fn, done),
       setEnv: (env) => (this.env = env),
     };
     this.id = id;
     this.zone = ZONES[id].build(ctx);
+    // Missions add pickups, machines and gates on top of the built zone.
+    this.mission = MISSIONS[id]?.setup(ctx, this.zone) || null;
     if (this.zone.bake) bakeStatic(this.root);
+    this.markers = ctx.markers;
+    const portals = ctx.portals;
+    this.zone.portalOf ??= (to) => portals.find((p) => p.to === to) || portals.find((p) => p.to === 'hub') || null;
     return this.zone;
   }
 
@@ -72,6 +83,7 @@ export class WorldManager {
     scene.fog = null;
     this.root = null;
     this.zone = null;
+    this.mission = null;
     this.env = null;
     this.tweens.length = 0;
   }
@@ -92,5 +104,6 @@ export class WorldManager {
       }
     }
     this.zone?.update?.(dt, t);
+    this.mission?.update?.(dt, t);
   }
 }

@@ -71,7 +71,7 @@ function archShape(halfW, straight) {
  * Glowing gate to another zone. Faces local +z. Walking into it calls onEnter.
  * Returns { group, update(t) }.
  */
-export function portal(ctx, { x, z, rotY = 0, color = 0x9b7bff, label, bg = '#7e57c2', onEnter }) {
+export function portal(ctx, { x, z, rotY = 0, color = 0x9b7bff, label, bg = '#7e57c2', to, onEnter }) {
   const g = new THREE.Group();
   g.position.set(x, 0, z);
   g.rotation.y = rotY;
@@ -115,6 +115,8 @@ export function portal(ctx, { x, z, rotY = 0, color = 0x9b7bff, label, bg = '#7e
   // into it still reaches the trigger, which is wider than the wall.
   ctx.collision.addBox({ x, z, w: 2.6, d: 0.2, rotY, minY: 0, maxY: 5 });
   ctx.interactions.addTrigger({ x, z, r: 1.05, minY: -1, maxY: 3, onEnter });
+  ctx.portals?.push({ x, z, to });
+  ctx.markers?.push({ x, z, color: '#b39dff' });
   return {
     group: g,
     update(t) {

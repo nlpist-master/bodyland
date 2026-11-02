@@ -1,4 +1,6 @@
 import { ICONS } from './icons.js';
+import { HUD } from './HUD.js';
+import { openInventory, openQuests, openMap } from './screens.js';
 
 // HTML overlay: top bar, interaction prompt, toasts, fade, pause and help.
 const QUALITY_NAMES = { auto: 'אוטומטי', high: 'גבוהה', medium: 'בינונית', low: 'נמוכה' };
@@ -8,7 +10,8 @@ const HELP_KEYS = `
     <li><span dir="ltr"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> / <kbd>↑</kbd><kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd></span>הליכה</li>
     <li><span><kbd>Shift</kbd></span>ריצה (להחזיק)</li>
     <li><span><kbd>רווח</kbd></span>קפיצה – החזיקו לקפיצה גבוהה</li>
-    <li><span><kbd>E</kbd></span>פעולה (ידיות, מכונות ועוד)</li>
+    <li><span><kbd>E</kbd></span>פעולה: לדבר, להפעיל מכונות ועוד</li>
+    <li><span><kbd>I</kbd> <kbd>J</kbd> <kbd>M</kbd></span>תיק · משימות · מפה</li>
     <li><span>גרירת עכבר</span>סיבוב המצלמה · גלגלת – זום</li>
     <li><span><kbd>Esc</kbd></span>השהיה</li>
   </ul>`;
@@ -19,6 +22,7 @@ const HELP_TOUCH = `
     <li><span>קפיצה</span>החזיקו לקפיצה גבוהה</li>
     <li><span>ריצה</span>הפעלה / כיבוי של ריצה</li>
     <li><span>פעולה</span>נדלק כשיש משהו להפעיל</li>
+    <li><span>כפתורים למעלה</span>תיק, משימות ומפה</li>
   </ul>`;
 
 export class UIManager {
@@ -28,8 +32,21 @@ export class UIManager {
     root.insertAdjacentHTML('beforeend', `
       <div class="hud hidden">
         <div class="hud-top">
-          <div class="chip zone-title"></div>
-          <button class="icon-btn pause-btn" aria-label="השהיה">${ICONS.pause}</button>
+          <div class="hud-right">
+            <div class="chip zone-title"></div>
+            <div class="restore hidden"><i></i><span></span></div>
+            <button class="tracker hidden"><b class="tr-title"></b><span class="tr-step"></span><span class="tr-bar"><i></i></span></button>
+          </div>
+          <div class="hud-left">
+            <div class="hud-btns">
+              <button class="icon-btn pause-btn" aria-label="השהיה">${ICONS.pause}</button>
+              <button class="icon-btn" data-open="inventory" aria-label="התיק">${ICONS.bag}</button>
+              <button class="icon-btn" data-open="quests" aria-label="משימות">${ICONS.quests}</button>
+              <button class="icon-btn" data-open="map" aria-label="מפה">${ICONS.map}</button>
+            </div>
+            <div class="hud-stats"><span class="stat stat-coins">🪙 <b>0</b></span><span class="stat stat-stars">⭐ <b>0</b></span></div>
+            <div class="map-slot"></div>
+          </div>
         </div>
       </div>
       <div class="prompt hidden"><kbd>E</kbd><span></span></div>
@@ -45,6 +62,7 @@ export class UIManager {
             <button class="btn small ghost" data-act="sound"></button>
           </div>
           <button class="btn small ghost" data-act="fullscreen">מסך מלא</button>
+          <button class="btn small ghost danger" data-act="newgame">משחק חדש</button>
         </div>
       </div>
       <div class="modal help hidden">
@@ -77,6 +95,19 @@ export class UIManager {
       e.currentTarget.blur();
       game.togglePause();
     });
+    const screens = { inventory: openInventory, quests: openQuests, map: openMap };
+    root.querySelectorAll('[data-open]').forEach((b) => b.addEventListener('click', (e) => {
+      e.currentTarget.blur();
+      if (game.state !== 'play' || game.modal) return;
+      game.audio.play('click');
+      screens[b.dataset.open](game);
+    }));
+    q('.tracker').addEventListener('click', (e) => {
+      e.currentTarget.blur();
+      if (game.state === 'play' && !game.modal) openQuests(game);
+    });
+    this.newGameBtn = q('[data-act="newgame"]');
+    this.hudLogic = new HUD(game, this.hud);
     root.addEventListener('click', (e) => {
       const btn = e.target.closest('[data-act]');
       if (!btn) return;
@@ -90,6 +121,14 @@ export class UIManager {
       else if (act === 'quality') game.cycleQuality();
       else if (act === 'sound') game.toggleSound();
       else if (act === 'fullscreen') game.toggleFullscreen();
+      else if (act === 'newgame') {
+        // Ask twice so nobody erases their progress by accident.
+        if (btn.classList.contains('confirm')) game.newGame();
+        else {
+          btn.classList.add('confirm');
+          btn.textContent = 'בטוחים? כל ההתקדמות תימחק. לחצו שוב';
+        }
+      }
       this.refreshSettings();
     });
     this.refreshSettings();
@@ -136,6 +175,8 @@ export class UIManager {
 
   showPause(on) {
     this.pauseEl.classList.toggle('hidden', !on);
+    this.newGameBtn.classList.remove('confirm');
+    this.newGameBtn.textContent = 'משחק חדש';
     if (on) this.refreshSettings();
   }
 

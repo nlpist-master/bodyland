@@ -190,7 +190,7 @@ export function build(ctx) {
   const cells = P.floatingCells(ctx, {});
 
   // ---- Gate back to the world center, right behind the start ----
-  const portal = S.portal(ctx, { x: 0, z: -13, rotY: 0, color: 0x9b7bff, label: 'מרכז העולם', onEnter: () => game.travel('hub') });
+  const portal = S.portal(ctx, { x: 0, z: -13, rotY: 0, color: 0x9b7bff, label: 'מרכז העולם', to: 'hub', onEnter: () => game.travel('hub') });
 
   return {
     title: 'זירת האימונים',

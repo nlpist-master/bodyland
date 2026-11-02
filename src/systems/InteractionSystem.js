@@ -14,7 +14,7 @@ export class InteractionSystem {
     this._setCurrent(null);
   }
 
-  /** { position: Vector3, label, radius?, once?, onInteract(item) } */
+  /** { position: Vector3, label, radius?, once?, when?(), onInteract(item) } */
   add(o) {
     const item = { radius: 1.8, once: false, enabled: true, ...o };
     this.items.push(item);
@@ -42,7 +42,7 @@ export class InteractionSystem {
     let best = null;
     let bestD = Infinity;
     for (const it of this.items) {
-      if (!it.enabled) continue;
+      if (!it.enabled || (it.when && !it.when())) continue;
       const dx = it.position.x - p.x, dz = it.position.z - p.z;
       const d = Math.hypot(dx, dz);
       if (d < it.radius && d < bestD && Math.abs(it.position.y - p.y) < 2.2) {

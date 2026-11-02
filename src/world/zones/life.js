@@ -256,7 +256,7 @@ export function build(ctx) {
   for (const [x, z, w, d] of [[0, 38.5, 80, 1], [0, -39.5, 80, 1], [-38.5, 0, 1, 80], [38.5, 0, 1, 80]]) P.box(ctx, { x, z, w, d, h: 2.2, color: 0x6fcf4a });
   P.box(ctx, { x: 0, z: -37.5, w: 8, d: 1, h: 2.2, color: 0x6fcf4a });
 
-  const portal = S.portal(ctx, { x: 0, z: -33, rotY: 0, color: 0x9b7bff, label: 'מרכז העולם', onEnter: () => game.travel('hub') });
+  const portal = S.portal(ctx, { x: 0, z: -33, rotY: 0, color: 0x9b7bff, label: 'מרכז העולם', to: 'hub', onEnter: () => game.travel('hub') });
   npcs.add(ctx, { id: 'pipetin', x: 3.4, z: -23, rotY: Math.PI + 0.5, zone: 'life' });
   npcs.add(ctx, { id: 'kibutzi', x: 9.6, z: -10.6, rotY: Math.PI, zone: 'life' });
 

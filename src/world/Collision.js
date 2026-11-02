@@ -77,6 +77,13 @@ export class Collision {
     c.cells.length = 0;
   }
 
+  /** Put back a collider taken out with remove(). */
+  restore(c) {
+    if (c.enabled) return c;
+    c.enabled = true;
+    return this._insert(c);
+  }
+
   _insert(c) {
     let ex, ez;
     if (c.type === 'cyl') {

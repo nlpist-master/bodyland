@@ -12,6 +12,7 @@ const KEYMAP = {
   Enter: 'confirm', NumpadEnter: 'confirm',
   KeyI: 'inventory',
   KeyJ: 'quests',
+  KeyM: 'map',
   Escape: 'pause', KeyP: 'pause',
   KeyH: 'help',
 };

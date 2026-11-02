@@ -70,7 +70,7 @@ function train(ctx) {
       w.rotation.z = Math.PI / 2;
     }
   }
-  ctx.collision.addBox({ x: -28, z: -1.2, w: 2.2, d: 5, minY: 0, maxY: 3.6 });
+  const colliders = [ctx.collision.addBox({ x: -28, z: -1.2, w: 2.2, d: 5, minY: 0, maxY: 3.6 })];
   // Two wagons loaded with grain sacks.
   const sack = toon(0xf2c98a);
   [-5.5, -10.5].forEach((z, i) => {
@@ -85,9 +85,9 @@ function train(ctx) {
         w.rotation.z = Math.PI / 2;
       }
     }
-    ctx.collision.addBox({ x: -28, z: -2 + z, w: 2.2, d: 4.2, minY: 0, maxY: 2.3 });
+    colliders.push(ctx.collision.addBox({ x: -28, z: -2 + z, w: 2.2, d: 4.2, minY: 0, maxY: 2.3 }));
   });
-  return { group: g, lamp };
+  return { group: g, lamp, colliders };
 }
 
 function powerStation(ctx) {
@@ -282,7 +282,7 @@ export function build(ctx) {
 
   // ---- Way home and our guide ----
   P.box(ctx, { x: 0, z: -37.5, w: 18, d: 1, h: 2.2, color: 0x4a3f7a });
-  const portal = S.portal(ctx, { x: 0, z: -33, rotY: 0, color: 0x9b7bff, label: 'מרכז העולם', onEnter: () => game.travel('hub') });
+  const portal = S.portal(ctx, { x: 0, z: -33, rotY: 0, color: 0x9b7bff, label: 'מרכז העולם', to: 'hub', onEnter: () => game.travel('hub') });
   npcs.add(ctx, { id: 'pipetin', x: 3.2, z: -23, rotY: Math.PI + 0.5, zone: 'energy' });
 
   return {

@@ -277,7 +277,7 @@ export function build(ctx) {
   const flyAll = butterflies(ctx, 7);
   const pollen = P.floatingCells(ctx, { count: 30, radiusMin: 6, radiusMax: 36, yMin: 2, yMax: 9, color: 0xffe066, seed: 9, size: [0.08, 0.18], flat: 1 });
 
-  const portal = S.portal(ctx, { x: 0, z: -33, rotY: 0, color: 0x9b7bff, label: 'מרכז העולם', onEnter: () => game.travel('hub') });
+  const portal = S.portal(ctx, { x: 0, z: -33, rotY: 0, color: 0x9b7bff, label: 'מרכז העולם', to: 'hub', onEnter: () => game.travel('hub') });
   npcs.add(ctx, { id: 'kibutzi', x: 3.4, z: -23, rotY: Math.PI + 0.5, zone: 'jungle' });
 
   return {
@@ -286,6 +286,7 @@ export function build(ctx) {
     spawns: { hub: SPAWN },
     bake: true,
     doors,
+    wheel,
     update(dt, t) {
       portal.update(t);
       water.update(t);

@@ -9,6 +9,12 @@ import { CameraController } from './player/CameraController.js';
 import { createCharacter } from './characters/CharacterBuilder.js';
 import { InteractionSystem } from './systems/InteractionSystem.js';
 import { NPCSystem } from './systems/NPCSystem.js';
+import { Inventory } from './systems/Inventory.js';
+import { QuestManager } from './systems/QuestManager.js';
+import { Pickups } from './systems/Pickups.js';
+import { Challenge } from './systems/Challenge.js';
+import { Panel } from './ui/Panel.js';
+import { openInventory, openQuests, openMap } from './ui/screens.js';
 import { AudioManager } from './systems/AudioManager.js';
 import { ProgressManager } from './systems/ProgressManager.js';
 import { UIManager } from './ui/UIManager.js';
@@ -30,9 +36,14 @@ export class Game {
     this.collision = new Collision();
     this.interactions = new InteractionSystem(this);
     this.npcs = new NPCSystem(this);
+    this.inventory = new Inventory(this);
+    this.quests = new QuestManager(this);
+    this.pickups = new Pickups(this);
+    this.challenge = new Challenge(this);
     this.world = new WorldManager(this);
     this.touch = new TouchControls(this.input, this.quality.isTouch);
     this.ui = new UIManager(this);
+    this.panel = new Panel(this);
     this.cameraCtl = new CameraController(this.engine.camera, this.input, this.collision);
     this.select = new CharacterSelect(this);
     this.player = null;
@@ -57,6 +68,8 @@ export class Game {
 
   openCharacterSelect() {
     this.state = 'select';
+    this.panel.close();
+    this.challenge.clear();
     this.setModal(null);
     this.ui.showPause(false);
     this.ui.showHUD(false);
@@ -104,12 +117,14 @@ export class Game {
     this.player.spawn(spawn);
     this.cameraCtl.reset(this.player.pos, spawn.yaw);
     this.ui.setZoneTitle(zone.title);
+    this.ui.hudLogic.minimap.build(this.collision, this.world.markers);
     this.engine.compile();
     const data = this.progress.data;
     data.zone = id;
     const first = !data.visited[id];
     data.visited[id] = true;
     this.progress.save();
+    this.ui.hudLogic.refresh();
     return first;
   }
 
@@ -130,6 +145,14 @@ export class Game {
     } else {
       this.ui.toast(ZONE_INFO[to].short);
     }
+  }
+
+  /** Erase all progress and go back to character select. */
+  newGame() {
+    this.progress.reset();
+    this.ui.refreshSettings();
+    this.ui.hudLogic.refresh();
+    this.openCharacterSelect();
   }
 
   setModal(name) {
@@ -177,17 +200,29 @@ export class Game {
       this.world.update(dt, t);
     } else if (this.state === 'play') {
       if (input.consume('pause')) {
-        if (this.modal === 'help') this.resume();
+        if (this.modal === 'panel') this.panel.closable && this.panel.close();
+        else if (this.modal === 'help') this.resume();
         else this.togglePause();
       }
+      const screens = { inventory: openInventory, quests: openQuests, map: openMap };
       if (!this.modal) {
         if (input.consume('help')) this.ui.showHelp(true);
+        for (const key in screens) if (input.consume(key)) screens[key](this);
+      } else if (this.modal === 'panel') {
+        // The same key closes its screen again.
+        for (const key in screens) if (input.consume(key) && this.panel.kind === key) this.panel.close();
+      }
+      if (!this.modal) {
         this.player.update(dt, this.cameraCtl.yaw);
         this.interactions.update(dt);
         this.npcs.update(dt);
+        this.pickups.update(dt, t);
+        this.challenge.update(dt);
+        this.quests.update(dt);
         this.world.update(dt, t);
         this.cameraCtl.update(dt, this.player);
         this._followSun();
+        this.ui.hudLogic.update(dt);
       } else if (this.modal === 'help' && input.consume('confirm')) {
         this.resume();
       }

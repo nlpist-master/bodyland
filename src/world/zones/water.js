@@ -136,7 +136,7 @@ function pipes(ctx) {
   puddle.position.set(18.5, 0.02, -20);
   ctx.root.add(puddle);
   P.sign(ctx, { x: 8, z: -16, text: 'צינורות', bg: '#1e88e5', rotY: -Math.PI / 2 - 0.4 });
-  return drips;
+  return { drips, puddle };
 }
 
 function waterTower(ctx) {
@@ -168,7 +168,7 @@ export function build(ctx) {
   const riv = river(ctx);
   const fall = waterfall(ctx);
   const d = dam(ctx);
-  const drips = pipes(ctx);
+  const leak = pipes(ctx);
   waterTower(ctx);
 
   // Border: low stone walls and round rocks.
@@ -179,7 +179,7 @@ export function build(ctx) {
   for (const [x, z] of [[-8, -16], [6, -26], [-26, 14], [12, 16], [-12, 18]]) S.tree(ctx, { x, z, leaf: 0x4fc3a0, leaf2: 0x6fd6b0 });
   const bubbles = P.floatingCells(ctx, { count: 30, radiusMin: 8, radiusMax: 40, yMin: 3, yMax: 12, color: 0xd6f6ff, seed: 5, size: [0.15, 0.45], flat: 1 });
 
-  const portal = S.portal(ctx, { x: 0, z: -33, rotY: 0, color: 0x9b7bff, label: 'מרכז העולם', onEnter: () => game.travel('hub') });
+  const portal = S.portal(ctx, { x: 0, z: -33, rotY: 0, color: 0x9b7bff, label: 'מרכז העולם', to: 'hub', onEnter: () => game.travel('hub') });
   npcs.add(ctx, { id: 'tiptip', x: 3.4, z: -23, rotY: Math.PI + 0.5, zone: 'water' });
 
   return {
@@ -188,6 +188,7 @@ export function build(ctx) {
     spawns: { hub: SPAWN },
     bake: true,
     gates: d.gates,
+    leak,
     update(dt, t) {
       portal.update(t);
       riv.water.update(t);
@@ -197,7 +198,7 @@ export function build(ctx) {
       for (let i = 0; i < fall.foam.length; i++) fall.foam[i].position.y = -0.5 + Math.abs(Math.sin(t * 3 + i)) * 0.35;
       riv.boat.position.y = -0.6 + Math.sin(t * 1.5) * 0.08;
       riv.boat.rotation.z = Math.sin(t * 1.1) * 0.06;
-      for (const { d: drop, phase } of drips) {
+      for (const { d: drop, phase } of leak.drips) {
         const k = (t * 0.9 + phase) % 1;
         drop.position.set(18.5 + Math.sin(phase * 20) * 0.3, 0.6 - k * 0.6 + Math.sin(k * Math.PI) * 0.5, -20 + Math.cos(phase * 20) * 0.3);
       }

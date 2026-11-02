@@ -10,8 +10,16 @@ function defaults() {
     visited: {},
     settings: { quality: 'auto', sound: true },
     flags: {},
+    coins: 0,
+    stars: 0,
+    inventory: {},  // item id -> count
+    seen: {},       // item ids ever collected
+    picked: {},     // one-time pickups already taken (coins, parts)
+    quests: {},     // quest id -> { state: 'active' | 'done', step }
   };
 }
+
+const OBJECTS = ['visited', 'flags', 'inventory', 'seen', 'picked', 'quests'];
 
 export class ProgressManager {
   constructor() {
@@ -27,7 +35,8 @@ export class ProgressManager {
     }
     const d = defaults();
     if (saved && saved.version === VERSION) {
-      this.data = { ...d, ...saved, settings: { ...d.settings, ...saved.settings }, flags: { ...saved.flags }, visited: { ...saved.visited } };
+      this.data = { ...d, ...saved, settings: { ...d.settings, ...saved.settings } };
+      for (const k of OBJECTS) this.data[k] = { ...saved[k] };
     } else {
       this.data = d;
     }
@@ -47,8 +56,11 @@ export class ProgressManager {
     this.save();
   }
 
+  /** Start over. Settings (quality, sound) are kept. */
   reset() {
+    const settings = this.data.settings;
     this.data = defaults();
+    this.data.settings = settings;
     this.save();
   }
 }

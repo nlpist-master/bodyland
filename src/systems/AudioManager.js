@@ -118,6 +118,37 @@ export class AudioManager {
           this._tone('square', f, f * 1.1, 0.05, 0.05, i * 0.07);
         }
         break;
+      case 'pickup':
+        this._tone('triangle', 660, 1320, 0.12, 0.18);
+        this._tone('sine', 990, 1480, 0.15, 0.12, 0.06);
+        break;
+      case 'coin':
+        this._tone('square', 988, 0, 0.06, 0.08);
+        this._tone('square', 1319, 0, 0.18, 0.08, 0.06);
+        break;
+      case 'quest':
+        [392, 523, 659].forEach((f, i) => this._tone('triangle', f, 0, 0.22, 0.16, i * 0.09));
+        break;
+      case 'step-done':
+        this._tone('triangle', 784, 0, 0.12, 0.16);
+        this._tone('triangle', 1047, 0, 0.25, 0.16, 0.1);
+        break;
+      case 'machine':
+        this._tone('sawtooth', 80, 220, 0.8, 0.12);
+        this._tone('sine', 440, 880, 0.6, 0.12, 0.3);
+        this._noise(0.5, 0.12, 'bandpass', 1200, 0, 400);
+        break;
+      case 'fail':
+        this._tone('triangle', 330, 220, 0.25, 0.16);
+        this._tone('triangle', 262, 196, 0.35, 0.14, 0.18);
+        break;
+      case 'tick':
+        this._tone('sine', 1200, 1600, 0.08, 0.15);
+        break;
+      case 'build':
+        this._noise(0.12, 0.3, 'lowpass', 900);
+        this._tone('square', 200, 120, 0.1, 0.1);
+        break;
       case 'portal':
         this._tone('sine', 300, 1200, 0.6, 0.18);
         this._tone('triangle', 450, 1800, 0.5, 0.1, 0.08);

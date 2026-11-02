@@ -6,7 +6,7 @@ import { ZONE_INFO } from '../../data/zones.js';
 
 // The Building Factory: a huge construction site with a tower crane,
 // conveyor belts, scaffolding to climb and a ravine whose bridge broke.
-// Repairing the bridge and running the crane are stage C missions.
+// Running the crane and rebuilding the bridge happen in missions/construction.js.
 
 const SPAWN = { x: 0, y: 0, z: -28, yaw: 0 };
 const RAVINE = { z0: 6, z1: 18 };
@@ -64,7 +64,7 @@ function brokenBridge(ctx) {
 }
 
 function towerCrane(ctx) {
-  const x = -16, z = -4, top = 16;
+  const x = -6, z = 1, top = 16;
   const steel = toon(0xffc107);
   const g = new THREE.Group();
   g.position.set(x, 0, z);
@@ -79,7 +79,7 @@ function towerCrane(ctx) {
   ctx.collision.addBox({ x, z, w: 1.6, d: 1.6, minY: 0, maxY: top + 1 });
   P.box(ctx, { x, z, w: 3, d: 3, h: 0.6, color: 0x8d8da8 });
 
-  // Rotating top: jib, counter-jib, cabin and a hook carrying bricks.
+  // Rotating top: jib, counter-jib, cabin, and a trolley carrying the new bridge beam.
   const head = new THREE.Group();
   head.position.set(x, top, z);
   ctx.root.add(head);
@@ -95,11 +95,34 @@ function towerCrane(ctx) {
   add(P.GEO.box, steel, -3, 0.4, 0, 5, 0.6, 0.9);
   add(P.GEO.box, toon(0x8d8da8), -4.8, -0.3, 0, 1.6, 1.4, 1.4);
   add(P.GEO.box, toon(0x4fc3f7), 0, -0.6, 1.2, 1.6, 1.4, 1.4);
-  add(P.GEO.cyl, toon(0x2a1b4d), 9, -5.6, 0, 0.04, 11.6, 0.04);
-  add(P.GEO.box, toon(0x8d8da8), 9, -11.6, 0, 0.6, 0.3, 0.3);
-  add(P.GEO.box, toon(0xb07a4a), 9, -12.2, 0, 2.2, 0.2, 2.2);
-  for (let i = 0; i < 6; i++) add(P.GEO.box, toon(0xd9534f), 8.4 + (i % 3) * 0.6, -11.85, -0.35 + Math.floor(i / 3) * 0.7, 0.55, 0.3, 0.6);
-  head.rotation.y = -0.5;
+  const hook = new THREE.Group();
+  hook.position.x = 7;
+  head.add(hook);
+  const cable = new THREE.Mesh(P.GEO.cyl, toon(0x2a1b4d));
+  const block = new THREE.Mesh(P.GEO.box, toon(0x8d8da8));
+  block.scale.set(0.6, 0.3, 0.3);
+  const beam = new THREE.Group();
+  const steelBeam = new THREE.Mesh(P.GEO.box, toon(0xff7b54));
+  steelBeam.scale.set(1, 0.3, 8.2);
+  steelBeam.castShadow = true;
+  beam.add(steelBeam);
+  for (const bz of [-2.5, 2.5]) {
+    const strap = new THREE.Mesh(P.GEO.cyl, toon(0x2a1b4d));
+    strap.scale.set(0.03, 0.6, 0.03);
+    strap.position.set(0, 0.45, bz * 0.2);
+    strap.rotation.x = bz > 0 ? -1.1 : 1.1;
+    beam.add(strap);
+  }
+  hook.add(cable, block, beam);
+  // drop = cable length below the jib.
+  const setDrop = (drop) => {
+    cable.scale.set(0.04, drop, 0.04);
+    cable.position.y = -drop / 2;
+    block.position.y = -drop;
+    if (beam.parent === hook) beam.position.y = -drop - 0.5; // until it is set down
+  };
+  setDrop(11);
+  head.rotation.y = 0.6;
 
   // Lookout platform on the mast, reached by a ladder.
   P.box(ctx, { x, z: z - 1.8, y: 5.8, w: 3, d: 2, h: 0.2, color: 0x8d8da8 });
@@ -107,7 +130,7 @@ function towerCrane(ctx) {
   S.fence(ctx, { x0: x - 1.5, z0: z - 2.8, x1: x - 0.7, z1: z - 2.8, y: 6, h: 0.8, color: 0xff7b54 });
   S.fence(ctx, { x0: x + 0.7, z0: z - 2.8, x1: x + 1.5, z1: z - 2.8, y: 6, h: 0.8, color: 0xff7b54 });
   P.sign(ctx, { x: x + 2.8, z: z - 3.6, text: 'מנוף', bg: '#e0a800', rotY: Math.PI + 0.4 });
-  return head;
+  return { head, hook, beam, setDrop, top, x, z };
 }
 
 function conveyors(ctx) {
@@ -241,13 +264,13 @@ export function build(ctx) {
   ctx.setEnv(P.environment(ctx, { skyTop: '#ffb86b', skyBottom: '#fff0d1', hemiSky: 0xfff6e0, hemiGround: 0xe3b574, fogNear: 50, fogFar: 130 }));
   ground(ctx);
   brokenBridge(ctx);
-  const craneHead = towerCrane(ctx);
+  const crane = towerCrane(ctx);
   const beltTex = conveyors(ctx);
   const drum = mixer(ctx);
   const helmet = scaffolding(ctx);
   yardDecor(ctx);
 
-  const portal = S.portal(ctx, { x: 0, z: -33, rotY: 0, color: 0x9b7bff, label: 'מרכז העולם', onEnter: () => game.travel('hub') });
+  const portal = S.portal(ctx, { x: 0, z: -33, rotY: 0, color: 0x9b7bff, label: 'מרכז העולם', to: 'hub', onEnter: () => game.travel('hub') });
   npcs.add(ctx, { id: 'shriron', x: 3.4, z: -23, rotY: Math.PI + 0.5, zone: 'construction' });
 
   return {
@@ -255,13 +278,13 @@ export function build(ctx) {
     spawn: SPAWN,
     spawns: { hub: SPAWN },
     bake: true,
-    craneHead,
+    crane,
     update(dt, t) {
       portal.update(t);
       beltTex.offset.x = -t * 0.6;
       drum.rotation.z = t * 1.2;
       helmet.rotation.y = t * 1.5;
-      craneHead.rotation.y = -0.5 + Math.sin(t * 0.4) * 0.02; // stuck, just creaking
+
     },
   };
 }
