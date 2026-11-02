@@ -97,6 +97,38 @@ kbd {
 }
 .prompt { --tx: -50%; }
 
+/* Speech bubble above a companion (positioned from JS) */
+.npc-bubble {
+  position: absolute;
+  transform: translate(-50%, calc(-100% - 14px));
+  max-width: min(78vw, 300px);
+  width: max-content;
+  background: var(--white);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: 18px;
+  padding: 8px 14px 10px;
+  font: 500 16px/1.4 var(--font);
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.15);
+  pointer-events: none;
+}
+.npc-bubble b { display: block; font-weight: 700; font-size: 14px; margin-bottom: 2px; }
+.npc-bubble::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -12px;
+  margin-left: -10px;
+  border: 10px solid transparent;
+  border-top-color: var(--ink);
+  border-bottom: 0;
+}
+.npc-bubble.pop { animation: bubble 0.25s ease-out; }
+@keyframes bubble {
+  0% { transform: translate(-50%, calc(-100% - 14px)) scale(0.6); opacity: 0; }
+  100% { transform: translate(-50%, calc(-100% - 14px)) scale(1); opacity: 1; }
+}
+
 /* Fade overlay for respawn / zone change */
 .fade { position: absolute; inset: 0; background: var(--bg); opacity: 0; transition: opacity 0.28s; pointer-events: none; }
 .fade.on { opacity: 1; }

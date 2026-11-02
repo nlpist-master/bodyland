@@ -6,6 +6,8 @@ function defaults() {
   return {
     version: VERSION,
     character: null,
+    zone: null,
+    visited: {},
     settings: { quality: 'auto', sound: true },
     flags: {},
   };
@@ -25,7 +27,7 @@ export class ProgressManager {
     }
     const d = defaults();
     if (saved && saved.version === VERSION) {
-      this.data = { ...d, ...saved, settings: { ...d.settings, ...saved.settings }, flags: { ...saved.flags } };
+      this.data = { ...d, ...saved, settings: { ...d.settings, ...saved.settings }, flags: { ...saved.flags }, visited: { ...saved.visited } };
     } else {
       this.data = d;
     }

@@ -3,20 +3,22 @@ import { Quality, QUALITY_OPTIONS } from './core/Quality.js';
 import { Input } from './core/Input.js';
 import { DEBUG, DebugOverlay } from './core/Debug.js';
 import { Collision } from './world/Collision.js';
-import { WorldManager } from './world/WorldManager.js';
+import { WorldManager, ZONES } from './world/WorldManager.js';
 import { PlayerController } from './player/PlayerController.js';
 import { CameraController } from './player/CameraController.js';
 import { createCharacter } from './characters/CharacterBuilder.js';
 import { InteractionSystem } from './systems/InteractionSystem.js';
+import { NPCSystem } from './systems/NPCSystem.js';
 import { AudioManager } from './systems/AudioManager.js';
 import { ProgressManager } from './systems/ProgressManager.js';
 import { UIManager } from './ui/UIManager.js';
 import { TouchControls } from './ui/TouchControls.js';
 import { CharacterSelect } from './ui/CharacterSelect.js';
 import { CHARACTER_BY_ID } from './data/characters.js';
+import { ZONE_INFO } from './data/zones.js';
 
 // Wires all systems together and runs the high-level game states:
-// 'select' (character select) and 'play'.
+// 'select' (character select), 'loading' and 'play'.
 export class Game {
   constructor() {
     this.progress = new ProgressManager();
@@ -27,6 +29,7 @@ export class Game {
     this.audio = new AudioManager(save.settings.sound);
     this.collision = new Collision();
     this.interactions = new InteractionSystem(this);
+    this.npcs = new NPCSystem(this);
     this.world = new WorldManager(this);
     this.touch = new TouchControls(this.input, this.quality.isTouch);
     this.ui = new UIManager(this);
@@ -76,14 +79,11 @@ export class Game {
     await this.ui.fade(true);
     this.select.close();
 
-    const zone = this.world.load('arena');
     this.player = new PlayerController(this, createCharacter(CHARACTER_BY_ID[id]));
-    this.player.spawn(zone.spawn);
-    this.cameraCtl.reset(this.player.pos, zone.spawn.yaw);
-    this.ui.setZoneTitle(zone.title);
+    const saved = this.progress.data.zone;
+    this._enterZone(ZONES[saved] && saved !== 'select' ? saved : 'hub');
     this.ui.showHUD(true);
     this.touch.setVisible(true);
-    this.engine.compile();
     this.state = 'play';
     await this.ui.fade(false);
 
@@ -92,9 +92,44 @@ export class Game {
       this.progress.setFlag('helpSeen');
       this.ui.showHelp(true);
     } else {
-      this.ui.toast(`${name}, ברוכים הבאים לזירת האימונים!`);
+      this.ui.toast(`${name}, ברוכים הבאים ל${ZONE_INFO[this.world.id].short}!`);
     }
     if (this.touch.enabled && innerHeight > innerWidth) this.ui.toast('טיפ: סובבו את המכשיר לרוחב');
+  }
+
+  /** Build a zone and place the player at the entrance used (from = previous zone). */
+  _enterZone(id, from) {
+    const zone = this.world.load(id);
+    const spawn = (from && zone.spawns?.[from]) || zone.spawn;
+    this.player.spawn(spawn);
+    this.cameraCtl.reset(this.player.pos, spawn.yaw);
+    this.ui.setZoneTitle(zone.title);
+    this.engine.compile();
+    const data = this.progress.data;
+    data.zone = id;
+    const first = !data.visited[id];
+    data.visited[id] = true;
+    this.progress.save();
+    return first;
+  }
+
+  /** Walk through a portal to another zone. */
+  async travel(to, from = this.world.id) {
+    if (this.state !== 'play' || this.traveling) return;
+    this.traveling = true;
+    this.audio.play('portal');
+    this.player.respawning = true; // freeze movement during the fade
+    await this.ui.fade(true);
+    const first = this._enterZone(to, from);
+    this.player.respawning = false;
+    await this.ui.fade(false);
+    this.traveling = false;
+    if (first && to !== 'hub') {
+      this.audio.play('secret');
+      this.ui.toast('אזור חדש: ' + ZONE_INFO[to].short + '!', 'good');
+    } else {
+      this.ui.toast(ZONE_INFO[to].short);
+    }
   }
 
   setModal(name) {
@@ -149,6 +184,7 @@ export class Game {
         if (input.consume('help')) this.ui.showHelp(true);
         this.player.update(dt, this.cameraCtl.yaw);
         this.interactions.update(dt);
+        this.npcs.update(dt);
         this.world.update(dt, t);
         this.cameraCtl.update(dt, this.player);
         this._followSun();

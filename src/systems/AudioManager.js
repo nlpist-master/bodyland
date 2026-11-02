@@ -112,6 +112,17 @@ export class AudioManager {
       case 'select':
         this._tone('triangle', 660, 990, 0.12, 0.16);
         break;
+      case 'talk':
+        for (let i = 0; i < 4; i++) {
+          const f = 420 + Math.random() * 380;
+          this._tone('square', f, f * 1.1, 0.05, 0.05, i * 0.07);
+        }
+        break;
+      case 'portal':
+        this._tone('sine', 300, 1200, 0.6, 0.18);
+        this._tone('triangle', 450, 1800, 0.5, 0.1, 0.08);
+        this._noise(0.6, 0.15, 'bandpass', 600, 0, 3000);
+        break;
     }
   }
 }

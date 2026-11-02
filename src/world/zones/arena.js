@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import * as P from '../Props.js';
+import * as S from '../Structures.js';
 import { toon, cellTexture } from '../Materials.js';
 
 // Professor Pipetin's training arena: a playground for every movement
@@ -188,11 +189,16 @@ export function build(ctx) {
 
   const cells = P.floatingCells(ctx, {});
 
+  // ---- Gate back to the world center, right behind the start ----
+  const portal = S.portal(ctx, { x: 0, z: -13, rotY: 0, color: 0x9b7bff, label: 'מרכז העולם', onEnter: () => game.travel('hub') });
+
   return {
     title: 'זירת האימונים',
     spawn: SPAWN,
+    spawns: { hub: SPAWN },
     update(dt, t) {
       cells.update(t);
+      portal.update(t);
       crystalMat.emissiveIntensity = 0.6 + Math.sin(t * 2.5) * 0.3;
       flagPivot.rotation.y = Math.sin(t * 2) * 0.25;
       ring.scale.setScalar(1 + Math.sin(t * 5) * 0.04);

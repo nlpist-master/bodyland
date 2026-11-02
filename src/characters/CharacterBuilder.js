@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { toon } from '../world/Materials.js';
 import { Animator } from './Animator.js';
+import { compactRig } from '../world/Bake.js';
 
 // Builds a cute, modestly dressed child out of simple shapes.
 // Hierarchy:  root (feet) > body > hips > { torso > { head, arms }, legs }
@@ -211,6 +212,7 @@ export function createCharacter(def) {
   const eyes = buildFace(headInner, def);
   buildHair(headInner, def, swing);
 
+  compactRig(root, new Set(swing.map((s) => s.obj)));
   const parts = { root, body, hips, torso, head, armL: arms[0], armR: arms[1], legL: legs[0], legR: legs[1], eyes, swing };
   return { def, root, parts, animator: new Animator(parts) };
 }

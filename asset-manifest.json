@@ -1,5 +1,5 @@
 {
- "version": "9a0b7a3859",
+ "version": "14ea83fbbc",
  "files": [
   {
    "url": "vendor/three/three.module.min.js",
@@ -22,29 +22,74 @@
    "hash": "65bc8c65415d"
   },
   {
+   "url": "src/characters/NPCs.js",
+   "size": 16398,
+   "hash": "b75d624d456a"
+  },
+  {
+   "url": "src/world/zones/energy.js",
+   "size": 13736,
+   "hash": "c6dbf7f10a61"
+  },
+  {
+   "url": "src/world/zones/jungle.js",
+   "size": 13654,
+   "hash": "5f28a64c1e07"
+  },
+  {
+   "url": "src/world/Structures.js",
+   "size": 13618,
+   "hash": "c8c52425f21b"
+  },
+  {
+   "url": "src/world/zones/life.js",
+   "size": 13160,
+   "hash": "a5ac0682eb93"
+  },
+  {
+   "url": "src/world/zones/construction.js",
+   "size": 12180,
+   "hash": "e0666717ae4d"
+  },
+  {
+   "url": "src/world/zones/hub.js",
+   "size": 11274,
+   "hash": "1c6ea49a0004"
+  },
+  {
+   "url": "src/world/zones/water.js",
+   "size": 9984,
+   "hash": "4eada32e3a21"
+  },
+  {
    "url": "src/world/Collision.js",
    "size": 9618,
    "hash": "96bc9068556d"
   },
   {
-   "url": "src/characters/CharacterBuilder.js",
-   "size": 8445,
-   "hash": "d87906e4485e"
+   "url": "src/world/zones/arena.js",
+   "size": 8861,
+   "hash": "373e594d1055"
   },
   {
-   "url": "src/world/zones/arena.js",
-   "size": 8352,
-   "hash": "5521e05b07be"
+   "url": "src/characters/CharacterBuilder.js",
+   "size": 8764,
+   "hash": "e25c9b1ea1ee"
   },
   {
    "url": "css/hud.css",
-   "size": 7774,
-   "hash": "4ecb0483ccf2"
+   "size": 8729,
+   "hash": "58462baa86f7"
   },
   {
    "url": "src/world/Props.js",
-   "size": 7674,
-   "hash": "ae332f342a0d"
+   "size": 8267,
+   "hash": "19db2fc70312"
+  },
+  {
+   "url": "src/Game.js",
+   "size": 7269,
+   "hash": "c75e8fe3e983"
   },
   {
    "url": "src/player/PlayerController.js",
@@ -53,18 +98,18 @@
   },
   {
    "url": "src/ui/UIManager.js",
-   "size": 5885,
-   "hash": "f59b803202a7"
-  },
-  {
-   "url": "src/Game.js",
-   "size": 5768,
-   "hash": "a538c7251602"
+   "size": 5961,
+   "hash": "7ecb09484e2a"
   },
   {
    "url": "src/boot.js",
    "size": 5602,
    "hash": "46dcd57680dc"
+  },
+  {
+   "url": "src/world/Fruit.js",
+   "size": 5496,
+   "hash": "00aee32480a2"
   },
   {
    "url": "css/main.css",
@@ -92,9 +137,19 @@
    "hash": "c97ff2d7be5f"
   },
   {
+   "url": "src/world/Bake.js",
+   "size": 4636,
+   "hash": "77be182992a9"
+  },
+  {
    "url": "src/core/Input.js",
    "size": 4594,
    "hash": "256a8883985b"
+  },
+  {
+   "url": "src/data/npcs.js",
+   "size": 4445,
+   "hash": "0f35520025f3"
   },
   {
    "url": "src/world/Materials.js",
@@ -102,19 +157,29 @@
    "hash": "980c46808537"
   },
   {
+   "url": "src/systems/AudioManager.js",
+   "size": 4368,
+   "hash": "9a32d5d8a7da"
+  },
+  {
    "url": "src/ui/TouchControls.js",
    "size": 4139,
    "hash": "d87592cf70d4"
   },
   {
-   "url": "src/systems/AudioManager.js",
-   "size": 3970,
-   "hash": "3e0609708fe4"
+   "url": "src/systems/NPCSystem.js",
+   "size": 4106,
+   "hash": "9b563afe0db2"
   },
   {
    "url": "src/ui/CharacterSelect.js",
    "size": 3528,
    "hash": "5145b3c55c3e"
+  },
+  {
+   "url": "src/world/WorldManager.js",
+   "size": 2898,
+   "hash": "4ac4c7bc2b8f"
   },
   {
    "url": "src/player/CameraController.js",
@@ -125,11 +190,6 @@
    "url": "src/core/Quality.js",
    "size": 2507,
    "hash": "e845c721b10b"
-  },
-  {
-   "url": "src/world/WorldManager.js",
-   "size": 2290,
-   "hash": "8ff7110e7620"
   },
   {
    "url": "src/systems/InteractionSystem.js",
@@ -158,8 +218,13 @@
   },
   {
    "url": "src/systems/ProgressManager.js",
-   "size": 1059,
-   "hash": "c80d10460ae5"
+   "size": 1177,
+   "hash": "3f12996a7046"
+  },
+  {
+   "url": "src/data/zones.js",
+   "size": 969,
+   "hash": "3e4d5ce43ecf"
   },
   {
    "url": "src/world/zones/selectStage.js",

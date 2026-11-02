@@ -51,7 +51,7 @@ export class UIManager {
         <div class="panel">
           <h2>איך משחקים?</h2>
           <div class="help-keys"></div>
-          <p class="note">בזירה מחכים לכם מדרגות, רמפה, סולם, טרמפולינה, מנהרה ומסלול קפיצות. וגם סוד אחד קטן...</p>
+          <p class="note">ממרכז העולם יוצאים בשערים לחמישה אזורים בתוך הגוף ולזירת האימונים. דברו עם החברים שתפגשו, טפסו לכל מקום, וחפשו מקומות סודיים!</p>
           <button class="btn big" data-act="close-help">הבנתי, יוצאים!</button>
         </div>
       </div>
