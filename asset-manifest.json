@@ -1,0 +1,180 @@
+{
+ "version": "9a0b7a3859",
+ "files": [
+  {
+   "url": "vendor/three/three.module.min.js",
+   "size": 691648,
+   "hash": "512c8b83df15"
+  },
+  {
+   "url": "assets/fonts/rubik-latin-500-normal.woff2",
+   "size": 19140,
+   "hash": "9170307012d6"
+  },
+  {
+   "url": "assets/fonts/rubik-latin-700-normal.woff2",
+   "size": 19064,
+   "hash": "4e8c13dd368d"
+  },
+  {
+   "url": "assets/fonts/rubik-latin-400-normal.woff2",
+   "size": 18856,
+   "hash": "65bc8c65415d"
+  },
+  {
+   "url": "src/world/Collision.js",
+   "size": 9618,
+   "hash": "96bc9068556d"
+  },
+  {
+   "url": "src/characters/CharacterBuilder.js",
+   "size": 8445,
+   "hash": "d87906e4485e"
+  },
+  {
+   "url": "src/world/zones/arena.js",
+   "size": 8352,
+   "hash": "5521e05b07be"
+  },
+  {
+   "url": "css/hud.css",
+   "size": 7774,
+   "hash": "4ecb0483ccf2"
+  },
+  {
+   "url": "src/world/Props.js",
+   "size": 7674,
+   "hash": "ae332f342a0d"
+  },
+  {
+   "url": "src/player/PlayerController.js",
+   "size": 7094,
+   "hash": "4f6ff2584d87"
+  },
+  {
+   "url": "src/ui/UIManager.js",
+   "size": 5885,
+   "hash": "f59b803202a7"
+  },
+  {
+   "url": "src/Game.js",
+   "size": 5768,
+   "hash": "a538c7251602"
+  },
+  {
+   "url": "src/boot.js",
+   "size": 5602,
+   "hash": "46dcd57680dc"
+  },
+  {
+   "url": "css/main.css",
+   "size": 5153,
+   "hash": "50ae4747e9cc"
+  },
+  {
+   "url": "src/characters/Animator.js",
+   "size": 5130,
+   "hash": "abeb59cc0194"
+  },
+  {
+   "url": "assets/fonts/rubik-hebrew-500-normal.woff2",
+   "size": 5064,
+   "hash": "f5be213cd611"
+  },
+  {
+   "url": "assets/fonts/rubik-hebrew-700-normal.woff2",
+   "size": 4976,
+   "hash": "033e48a4f146"
+  },
+  {
+   "url": "assets/fonts/rubik-hebrew-400-normal.woff2",
+   "size": 4876,
+   "hash": "c97ff2d7be5f"
+  },
+  {
+   "url": "src/core/Input.js",
+   "size": 4594,
+   "hash": "256a8883985b"
+  },
+  {
+   "url": "src/world/Materials.js",
+   "size": 4378,
+   "hash": "980c46808537"
+  },
+  {
+   "url": "src/ui/TouchControls.js",
+   "size": 4139,
+   "hash": "d87592cf70d4"
+  },
+  {
+   "url": "src/systems/AudioManager.js",
+   "size": 3970,
+   "hash": "3e0609708fe4"
+  },
+  {
+   "url": "src/ui/CharacterSelect.js",
+   "size": 3528,
+   "hash": "5145b3c55c3e"
+  },
+  {
+   "url": "src/player/CameraController.js",
+   "size": 2517,
+   "hash": "5d170e0e1779"
+  },
+  {
+   "url": "src/core/Quality.js",
+   "size": 2507,
+   "hash": "e845c721b10b"
+  },
+  {
+   "url": "src/world/WorldManager.js",
+   "size": 2290,
+   "hash": "8ff7110e7620"
+  },
+  {
+   "url": "src/systems/InteractionSystem.js",
+   "size": 2011,
+   "hash": "4b22c5364177"
+  },
+  {
+   "url": "src/core/Engine.js",
+   "size": 1946,
+   "hash": "e125c902d615"
+  },
+  {
+   "url": "index.html",
+   "size": 1389,
+   "hash": "b23cab8b79cd"
+  },
+  {
+   "url": "src/data/characters.js",
+   "size": 1246,
+   "hash": "0c08a547fe64"
+  },
+  {
+   "url": "src/core/Debug.js",
+   "size": 1219,
+   "hash": "90f9e4416917"
+  },
+  {
+   "url": "src/systems/ProgressManager.js",
+   "size": 1059,
+   "hash": "c80d10460ae5"
+  },
+  {
+   "url": "src/world/zones/selectStage.js",
+   "size": 858,
+   "hash": "a125b9358f78"
+  },
+  {
+   "url": "src/ui/icons.js",
+   "size": 570,
+   "hash": "c4a5ba3a0f71"
+  },
+  {
+   "url": "src/main.js",
+   "size": 535,
+   "hash": "4eac1962f8d0"
+  }
+ ]
+}

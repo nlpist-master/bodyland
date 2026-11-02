@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#2a1b4d">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>BODY QUEST – ההרפתקה הגדולה בתוך הגוף</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/hud.css">
+  <script type="importmap">{ "imports": { "three": "./vendor/three/three.module.min.js" } }</script>
+</head>
+<body>
+  <div id="game"></div>
+  <div id="ui"></div>
+
+  <div id="loading" class="screen loading">
+    <div class="logo" dir="ltr">BODY<span>QUEST</span></div>
+    <div class="tagline">ההרפתקה הגדולה בתוך הגוף</div>
+    <div class="bar"><div class="fill" id="load-fill"></div></div>
+    <div class="load-text" id="load-text">0%</div>
+    <div class="load-size" id="load-size" dir="ltr"></div>
+    <div class="load-error hidden" id="load-error">
+      <p id="load-error-msg">לא הצלחנו לטעון את המשחק.</p>
+      <button class="btn" id="load-retry">נסו שוב</button>
+    </div>
+  </div>
+
+  <noscript><div class="screen loading"><p>כדי לשחק צריך להפעיל JavaScript בדפדפן.</p></div></noscript>
+  <script src="src/boot.js"></script>
+</body>
+</html>

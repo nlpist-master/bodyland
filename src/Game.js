@@ -1,0 +1,170 @@
+import { Engine } from './core/Engine.js';
+import { Quality, QUALITY_OPTIONS } from './core/Quality.js';
+import { Input } from './core/Input.js';
+import { DEBUG, DebugOverlay } from './core/Debug.js';
+import { Collision } from './world/Collision.js';
+import { WorldManager } from './world/WorldManager.js';
+import { PlayerController } from './player/PlayerController.js';
+import { CameraController } from './player/CameraController.js';
+import { createCharacter } from './characters/CharacterBuilder.js';
+import { InteractionSystem } from './systems/InteractionSystem.js';
+import { AudioManager } from './systems/AudioManager.js';
+import { ProgressManager } from './systems/ProgressManager.js';
+import { UIManager } from './ui/UIManager.js';
+import { TouchControls } from './ui/TouchControls.js';
+import { CharacterSelect } from './ui/CharacterSelect.js';
+import { CHARACTER_BY_ID } from './data/characters.js';
+
+// Wires all systems together and runs the high-level game states:
+// 'select' (character select) and 'play'.
+export class Game {
+  constructor() {
+    this.progress = new ProgressManager();
+    const save = this.progress.load();
+    this.quality = new Quality(save.settings.quality);
+    this.engine = new Engine(document.getElementById('game'), this.quality);
+    this.input = new Input(this.engine.canvas);
+    this.audio = new AudioManager(save.settings.sound);
+    this.collision = new Collision();
+    this.interactions = new InteractionSystem(this);
+    this.world = new WorldManager(this);
+    this.touch = new TouchControls(this.input, this.quality.isTouch);
+    this.ui = new UIManager(this);
+    this.cameraCtl = new CameraController(this.engine.camera, this.input, this.collision);
+    this.select = new CharacterSelect(this);
+    this.player = null;
+    this.state = 'boot';
+    this.modal = null;
+
+    this.engine.onUpdate = (dt, t) => this.update(dt, t);
+    this.engine.onContextLost = () => this.ui.toast('הגרפיקה הופסקה. רעננו את הדף כדי להמשיך.');
+    if (DEBUG) {
+      this.debug = new DebugOverlay(this);
+      this.engine.onFrame = (raw) => this.debug.tick(raw);
+    }
+    window.__BQ = this; // handy for testing from the console
+  }
+
+  async init(boot) {
+    this.openCharacterSelect();
+    boot.progress(0.5, 'מכין את הדמויות...');
+    this.engine.compile();
+    this.engine.start();
+  }
+
+  openCharacterSelect() {
+    this.state = 'select';
+    this.setModal(null);
+    this.ui.showPause(false);
+    this.ui.showHUD(false);
+    this.touch.setVisible(false);
+    if (this.player) {
+      this.player.detach();
+      this.player = null;
+    }
+    this.select.open(this.progress.data.character || 'dvori', (id) => this.startPlay(id));
+  }
+
+  async startPlay(id) {
+    if (this.state !== 'select') return;
+    this.state = 'loading';
+    this.progress.data.character = id;
+    this.progress.save();
+    if (this.touch.enabled && !document.fullscreenElement) {
+      document.documentElement.requestFullscreen?.().catch(() => {});
+    }
+    await this.ui.fade(true);
+    this.select.close();
+
+    const zone = this.world.load('arena');
+    this.player = new PlayerController(this, createCharacter(CHARACTER_BY_ID[id]));
+    this.player.spawn(zone.spawn);
+    this.cameraCtl.reset(this.player.pos, zone.spawn.yaw);
+    this.ui.setZoneTitle(zone.title);
+    this.ui.showHUD(true);
+    this.touch.setVisible(true);
+    this.engine.compile();
+    this.state = 'play';
+    await this.ui.fade(false);
+
+    const name = CHARACTER_BY_ID[id].name;
+    if (!this.progress.data.flags.helpSeen) {
+      this.progress.setFlag('helpSeen');
+      this.ui.showHelp(true);
+    } else {
+      this.ui.toast(`${name}, ברוכים הבאים לזירת האימונים!`);
+    }
+    if (this.touch.enabled && innerHeight > innerWidth) this.ui.toast('טיפ: סובבו את המכשיר לרוחב');
+  }
+
+  setModal(name) {
+    this.modal = name;
+  }
+
+  togglePause() {
+    if (this.state !== 'play') return;
+    if (this.modal === 'pause') this.resume();
+    else if (!this.modal) {
+      this.setModal('pause');
+      this.ui.showPause(true);
+    }
+  }
+
+  resume() {
+    this.ui.showPause(false);
+    this.ui.showHelp(false);
+    this.setModal(null);
+  }
+
+  cycleQuality() {
+    const s = this.progress.data.settings;
+    s.quality = QUALITY_OPTIONS[(QUALITY_OPTIONS.indexOf(s.quality) + 1) % QUALITY_OPTIONS.length];
+    this.quality.set(s.quality);
+    this.progress.save();
+  }
+
+  toggleSound() {
+    const s = this.progress.data.settings;
+    s.sound = !s.sound;
+    this.audio.setEnabled(s.sound);
+    this.progress.save();
+  }
+
+  toggleFullscreen() {
+    if (document.fullscreenElement) document.exitFullscreen?.();
+    else document.documentElement.requestFullscreen?.().catch(() => {});
+  }
+
+  update(dt, t) {
+    const input = this.input;
+    if (this.state === 'select') {
+      this.select.update(dt, t);
+      this.world.update(dt, t);
+    } else if (this.state === 'play') {
+      if (input.consume('pause')) {
+        if (this.modal === 'help') this.resume();
+        else this.togglePause();
+      }
+      if (!this.modal) {
+        if (input.consume('help')) this.ui.showHelp(true);
+        this.player.update(dt, this.cameraCtl.yaw);
+        this.interactions.update(dt);
+        this.world.update(dt, t);
+        this.cameraCtl.update(dt, this.player);
+        this._followSun();
+      } else if (this.modal === 'help' && input.consume('confirm')) {
+        this.resume();
+      }
+    }
+    input.endFrame();
+  }
+
+  /** Keep the shadow-casting light centered on the player. */
+  _followSun() {
+    const sun = this.world.env?.sun;
+    if (!sun) return;
+    const p = this.player.pos;
+    sun.position.set(p.x + 12, p.y + 22, p.z + 8);
+    sun.target.position.set(p.x, p.y, p.z);
+  }
+}

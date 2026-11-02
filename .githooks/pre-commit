@@ -1,0 +1,3 @@
+#!/bin/sh
+# Keep asset-manifest.json and sw.js in sync with the committed files.
+node tools/build-manifest.mjs >/dev/null && git add asset-manifest.json sw.js
