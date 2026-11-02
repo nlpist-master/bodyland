@@ -1,5 +1,5 @@
 {
- "version": "7b5874d28f",
+ "version": "c89cc2cde7",
  "files": [
   {
    "url": "vendor/three/three.module.min.js",
@@ -87,6 +87,11 @@
    "hash": "7dcd5007ab86"
   },
   {
+   "url": "src/boot.js",
+   "size": 7234,
+   "hash": "c2f9943dc1ee"
+  },
+  {
    "url": "src/player/PlayerController.js",
    "size": 7094,
    "hash": "4f6ff2584d87"
@@ -100,11 +105,6 @@
    "url": "src/ui/UIManager.js",
    "size": 5961,
    "hash": "7ecb09484e2a"
-  },
-  {
-   "url": "src/boot.js",
-   "size": 5602,
-   "hash": "46dcd57680dc"
   },
   {
    "url": "src/world/Fruit.js",

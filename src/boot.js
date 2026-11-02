@@ -120,6 +120,40 @@
     }
   }
 
+  // A new version was published but this device still runs the old one:
+  // the old Service Worker would keep serving old files. Let the new worker
+  // download the new version (showing real progress), then reload once.
+  function needsUpdate(m) {
+    if (!useSW || !navigator.serviceWorker.controller || !window.caches) return Promise.resolve(false);
+    return caches.has('bq-' + m.version).then(function (has) { return !has; });
+  }
+
+  function waitForUpdate(m) {
+    setProgress(0, 'מעדכן לגרסה חדשה...');
+    return new Promise(function (resolve, reject) {
+      var last = -1;
+      var lastChange = Date.now();
+      navigator.serviceWorker.addEventListener('controllerchange', function () { location.reload(); });
+      navigator.serviceWorker.getRegistration().then(function (reg) {
+        if (reg) reg.update().catch(function () {});
+        else navigator.serviceWorker.register('sw.js').catch(reject);
+      });
+      var poll = setInterval(function () {
+        caches.open('bq-' + m.version).then(function (c) { return c.keys(); }).then(function (keys) {
+          if (keys.length !== last) {
+            last = keys.length;
+            lastChange = Date.now();
+          }
+          setProgress(Math.min(1, keys.length / m.files.length) * 0.9, 'מעדכן לגרסה חדשה...');
+          if (Date.now() - lastChange > STALL_MS) {
+            clearInterval(poll);
+            reject(new Error('update stalled'));
+          }
+        });
+      }, 250);
+    });
+  }
+
   function start() {
     $('load-error').classList.add('hidden');
     setProgress(0, 'מתחבר...');
@@ -130,8 +164,12 @@
       })
       .then(function (m) {
         manifest = m;
+        return needsUpdate(m);
+      })
+      .then(function (update) {
+        if (update) return waitForUpdate(manifest);
         total = 0;
-        m.files.forEach(function (f) { if (!SKIP[f.url]) total += f.size; });
+        manifest.files.forEach(function (f) { if (!SKIP[f.url]) total += f.size; });
         renderBytes();
         return openCache().then(loadAll);
       })
