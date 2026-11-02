@@ -1,5 +1,5 @@
 {
- "version": "14ea83fbbc",
+ "version": "7b5874d28f",
  "files": [
   {
    "url": "vendor/three/three.module.min.js",
@@ -23,28 +23,28 @@
   },
   {
    "url": "src/characters/NPCs.js",
-   "size": 16398,
-   "hash": "b75d624d456a"
+   "size": 16053,
+   "hash": "9f1fdd2374e6"
   },
   {
    "url": "src/world/zones/energy.js",
-   "size": 13736,
-   "hash": "c6dbf7f10a61"
+   "size": 13429,
+   "hash": "ffe8345e2759"
   },
   {
    "url": "src/world/zones/jungle.js",
-   "size": 13654,
-   "hash": "5f28a64c1e07"
+   "size": 13354,
+   "hash": "f0aba57782c5"
   },
   {
    "url": "src/world/Structures.js",
-   "size": 13618,
-   "hash": "c8c52425f21b"
+   "size": 13277,
+   "hash": "5f9c03fd793e"
   },
   {
    "url": "src/world/zones/life.js",
-   "size": 13160,
-   "hash": "a5ac0682eb93"
+   "size": 12883,
+   "hash": "8a2ba4eca044"
   },
   {
    "url": "src/world/zones/construction.js",
@@ -53,13 +53,13 @@
   },
   {
    "url": "src/world/zones/hub.js",
-   "size": 11274,
-   "hash": "1c6ea49a0004"
+   "size": 11013,
+   "hash": "e6d187de3eac"
   },
   {
    "url": "src/world/zones/water.js",
-   "size": 9984,
-   "hash": "4eada32e3a21"
+   "size": 9778,
+   "hash": "84f2d87ed0e6"
   },
   {
    "url": "src/world/Collision.js",
@@ -67,34 +67,34 @@
    "hash": "96bc9068556d"
   },
   {
-   "url": "src/world/zones/arena.js",
-   "size": 8861,
-   "hash": "373e594d1055"
-  },
-  {
-   "url": "src/characters/CharacterBuilder.js",
-   "size": 8764,
-   "hash": "e25c9b1ea1ee"
-  },
-  {
    "url": "css/hud.css",
    "size": 8729,
    "hash": "58462baa86f7"
   },
   {
-   "url": "src/world/Props.js",
-   "size": 8267,
-   "hash": "19db2fc70312"
+   "url": "src/world/zones/arena.js",
+   "size": 8654,
+   "hash": "ee63d37dee5c"
   },
   {
-   "url": "src/Game.js",
-   "size": 7269,
-   "hash": "c75e8fe3e983"
+   "url": "src/characters/CharacterBuilder.js",
+   "size": 8546,
+   "hash": "9a8cfd0abf81"
+  },
+  {
+   "url": "src/world/Props.js",
+   "size": 8074,
+   "hash": "7dcd5007ab86"
   },
   {
    "url": "src/player/PlayerController.js",
    "size": 7094,
    "hash": "4f6ff2584d87"
+  },
+  {
+   "url": "src/Game.js",
+   "size": 7063,
+   "hash": "159fcb2548d8"
   },
   {
    "url": "src/ui/UIManager.js",
@@ -108,8 +108,8 @@
   },
   {
    "url": "src/world/Fruit.js",
-   "size": 5496,
-   "hash": "00aee32480a2"
+   "size": 5366,
+   "hash": "4c594c8716ff"
   },
   {
    "url": "css/main.css",
@@ -137,14 +137,14 @@
    "hash": "c97ff2d7be5f"
   },
   {
-   "url": "src/world/Bake.js",
-   "size": 4636,
-   "hash": "77be182992a9"
-  },
-  {
    "url": "src/core/Input.js",
    "size": 4594,
    "hash": "256a8883985b"
+  },
+  {
+   "url": "src/world/Bake.js",
+   "size": 4539,
+   "hash": "cbe9c481ab49"
   },
   {
    "url": "src/data/npcs.js",
@@ -178,8 +178,8 @@
   },
   {
    "url": "src/world/WorldManager.js",
-   "size": 2898,
-   "hash": "4ac4c7bc2b8f"
+   "size": 2802,
+   "hash": "7700200a2806"
   },
   {
    "url": "src/player/CameraController.js",
@@ -218,8 +218,8 @@
   },
   {
    "url": "src/systems/ProgressManager.js",
-   "size": 1177,
-   "hash": "3f12996a7046"
+   "size": 1123,
+   "hash": "fdac0d4aaecd"
   },
   {
    "url": "src/data/zones.js",
