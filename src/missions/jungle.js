@@ -1,6 +1,6 @@
 import { ITEMS, COLOR_NAMES } from '../data/items.js';
 import { machineFeed } from '../minigames/MachineFeed.js';
-import { use, foods, flag } from './helpers.js';
+import { use, foods, flag, board } from './helpers.js';
 
 // Jungle of Colors: each garden gate opens with two foods of its color.
 // Then feed the fiber station three DIFFERENT fiber foods: variety!
@@ -87,6 +87,8 @@ export function setup(ctx, zone) {
   });
 
   // ---- Fiber station ----
+  board(ctx, { x: -28, z: 11, radius: 2.6, label: 'לתכנן שבוע של צבעים', quest: 'variety', name: 'week', flagName: 'jWeek' });
+
   use(ctx, {
     x: -14.2, z: 22, radius: 2.4,
     label: 'להזין את תחנת הסיבים',

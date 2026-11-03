@@ -3,7 +3,7 @@ import * as P from '../world/Props.js';
 import * as S from '../world/Structures.js';
 import { toon } from '../world/Materials.js';
 import { pipePuzzle } from '../minigames/PipePuzzle.js';
-import { use, parts, foods, flag } from './helpers.js';
+import { use, parts, foods, flag, board, station } from './helpers.js';
 
 // Water Kingdom: find the wrench on the water tower, fix the leaking pipe,
 // open three valves on the dam so water flows again, then a drop race.
@@ -32,6 +32,9 @@ export function setup(ctx, zone) {
     for (const d of zone.leak.drips) d.d.visible = false;
   };
   if (flag(ctx, 'wPipe')) fixPipe();
+  station(ctx, { x: -2, z: -17, text: 'תחנת ציוד', bg: '#1e88e5', color: 0x4fc3f7 });
+  board(ctx, { x: -2, z: -16.2, radius: 2.2, label: 'לארוז ציוד למסע', quest: 'hotDay', name: 'hot', flagName: 'wHot' });
+
   use(ctx, {
     x: 18.5, z: -21.2, radius: 2,
     label: 'לתקן את הצינור',

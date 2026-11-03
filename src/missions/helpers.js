@@ -1,5 +1,8 @@
 import * as THREE from 'three';
 import { ITEMS } from '../data/items.js';
+import { BOARDS } from '../data/boards.js';
+import { planBoard } from '../minigames/PlanBoard.js';
+import * as P from '../world/Props.js';
 
 // Small shared pieces for zone missions.
 
@@ -33,3 +36,24 @@ export function parts(ctx, list) {
 }
 
 export const flag = (ctx, name) => !!ctx.save.flags[name];
+
+/** A thinking challenge at a spot in the world, open while its mission step is. */
+export function board(ctx, { x, y = 0, z, radius = 2.2, label, quest, name, flagName, onDone }) {
+  const { game } = ctx;
+  return use(ctx, {
+    x, y, z, radius, label,
+    when: () => game.quests.step(quest)?.flag === flagName,
+    onUse: async () => {
+      if (!(await planBoard(game, BOARDS[name]))) return;
+      game.progress.setFlag(flagName);
+      onDone?.();
+    },
+  });
+}
+
+/** A small table with a sign: where a thinking challenge happens. */
+export function station(ctx, { x, z, rotY = 0, color = 0x7e57c2, text, bg = '#7e57c2' }) {
+  P.box(ctx, { x, z, w: 1.6, d: 0.9, h: 0.9, rotY, color });
+  P.box(ctx, { x, z, y: 0.9, w: 1.8, d: 1.1, h: 0.08, rotY, color: 0xfff1d6, collide: false });
+  P.sign(ctx, { x: x + 1.6, z, text, bg, rotY });
+}

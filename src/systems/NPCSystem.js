@@ -89,10 +89,13 @@ export class NPCSystem {
 
   talk(n) {
     // A mission event (new mission, reporting back) is said first. Otherwise
-    // the NPC goes through a fixed rotation: mission explanations, then the
-    // usual lines, and around again, so nothing said can be missed for good.
+    // the NPC goes through a fixed rotation: mission explanations, what is new
+    // since the zone's big mission, the usual lines, and around again, so
+    // nothing said can be missed for good.
     const event = this.game.quests.talk(n.id, n.zone);
-    const cycle = this.game.quests.linesFor(n.id, n.zone).concat(n.script.lines);
+    const { later, lines } = n.script;
+    const news = later && this.game.quests.isDone(later.after) ? later.lines : [];
+    const cycle = this.game.quests.linesFor(n.id, n.zone).concat(news, lines);
     let line;
     if (event) {
       line = event.line;

@@ -14,6 +14,7 @@ import { QuestManager } from './systems/QuestManager.js';
 import { Pickups } from './systems/Pickups.js';
 import { Challenge } from './systems/Challenge.js';
 import { Panel } from './ui/Panel.js';
+import { openStory } from './ui/Story.js';
 import { openInventory, openQuests, openMap } from './ui/screens.js';
 import { AudioManager } from './systems/AudioManager.js';
 import { ProgressManager } from './systems/ProgressManager.js';
@@ -103,7 +104,7 @@ export class Game {
     const name = CHARACTER_BY_ID[id].name;
     if (!this.progress.data.flags.helpSeen) {
       this.progress.setFlag('helpSeen');
-      this.ui.showHelp(true);
+      openStory(this, () => this.ui.showHelp(true));
     } else {
       this.ui.toast(`${name}, ברוכים הבאים ל${ZONE_INFO[this.world.id].short}!`);
     }

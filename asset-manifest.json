@@ -1,5 +1,5 @@
 {
- "version": "36584e7288",
+ "version": "7dd2984ceb",
  "files": [
   {
    "url": "vendor/three/three.module.min.js",
@@ -27,6 +27,11 @@
    "hash": "9f1fdd2374e6"
   },
   {
+   "url": "src/data/quests.js",
+   "size": 13921,
+   "hash": "826fbbde8be6"
+  },
+  {
    "url": "src/world/zones/energy.js",
    "size": 13487,
    "hash": "f3b8c35d2f79"
@@ -43,8 +48,8 @@
   },
   {
    "url": "src/world/zones/life.js",
-   "size": 12894,
-   "hash": "ffcc49ef7b41"
+   "size": 12973,
+   "hash": "f4dc9c20a1be"
   },
   {
    "url": "src/world/zones/construction.js",
@@ -52,14 +57,19 @@
    "hash": "0e5b7e624180"
   },
   {
+   "url": "css/screens.css",
+   "size": 12478,
+   "hash": "50632680b93a"
+  },
+  {
+   "url": "src/data/boards.js",
+   "size": 11962,
+   "hash": "c801b5b73714"
+  },
+  {
    "url": "src/world/zones/hub.js",
    "size": 11027,
    "hash": "a30ce4f01cf4"
-  },
-  {
-   "url": "css/screens.css",
-   "size": 10804,
-   "hash": "0eefc9ae1875"
   },
   {
    "url": "src/world/zones/water.js",
@@ -83,8 +93,8 @@
   },
   {
    "url": "src/Game.js",
-   "size": 8775,
-   "hash": "aac0ebce5d95"
+   "size": 8841,
+   "hash": "a341b667c942"
   },
   {
    "url": "css/hud.css",
@@ -97,14 +107,14 @@
    "hash": "872929549926"
   },
   {
+   "url": "src/data/npcs.js",
+   "size": 8564,
+   "hash": "a660b9f53cf2"
+  },
+  {
    "url": "src/characters/CharacterBuilder.js",
    "size": 8546,
    "hash": "9a8cfd0abf81"
-  },
-  {
-   "url": "src/data/quests.js",
-   "size": 8387,
-   "hash": "ae874e489518"
   },
   {
    "url": "src/world/Props.js",
@@ -113,8 +123,8 @@
   },
   {
    "url": "src/missions/energy.js",
-   "size": 7869,
-   "hash": "d049592f92ce"
+   "size": 8046,
+   "hash": "ee3105a56234"
   },
   {
    "url": "src/boot.js",
@@ -123,18 +133,18 @@
   },
   {
    "url": "src/systems/NPCSystem.js",
-   "size": 6405,
-   "hash": "b2459033fbd1"
-  },
-  {
-   "url": "src/missions/construction.js",
-   "size": 5796,
-   "hash": "40a8c9c9cf50"
+   "size": 6568,
+   "hash": "35f780f24b6b"
   },
   {
    "url": "src/systems/QuestManager.js",
-   "size": 5534,
-   "hash": "e3024425d7d7"
+   "size": 6044,
+   "hash": "a59e21787983"
+  },
+  {
+   "url": "src/missions/construction.js",
+   "size": 6004,
+   "hash": "a8ba9a536c48"
   },
   {
    "url": "src/systems/AudioManager.js",
@@ -187,29 +197,24 @@
    "hash": "c97ff2d7be5f"
   },
   {
+   "url": "src/missions/jungle.js",
+   "size": 4810,
+   "hash": "ffa9ddbfe10d"
+  },
+  {
+   "url": "src/missions/water.js",
+   "size": 4788,
+   "hash": "47775bf78e5d"
+  },
+  {
    "url": "src/core/Input.js",
    "size": 4772,
    "hash": "4ee60fdcb847"
   },
   {
-   "url": "src/missions/jungle.js",
-   "size": 4659,
-   "hash": "8615f1d6a6d5"
-  },
-  {
-   "url": "src/missions/water.js",
-   "size": 4542,
-   "hash": "1dd3085065c9"
-  },
-  {
    "url": "src/world/Bake.js",
    "size": 4539,
    "hash": "cbe9c481ab49"
-  },
-  {
-   "url": "src/data/npcs.js",
-   "size": 4445,
-   "hash": "0f35520025f3"
   },
   {
    "url": "src/data/items.js",
@@ -242,6 +247,11 @@
    "hash": "27ac54dc3180"
   },
   {
+   "url": "src/ui/Story.js",
+   "size": 3639,
+   "hash": "f5c2eb7422fc"
+  },
+  {
    "url": "src/ui/HUD.js",
    "size": 3539,
    "hash": "4651cb19aaec"
@@ -262,6 +272,11 @@
    "hash": "98ee4f8c87a0"
   },
   {
+   "url": "src/minigames/PlanBoard.js",
+   "size": 3026,
+   "hash": "a24d3a55dd8d"
+  },
+  {
    "url": "src/player/CameraController.js",
    "size": 2842,
    "hash": "7c37bd9470e5"
@@ -270,6 +285,16 @@
    "url": "src/core/Quality.js",
    "size": 2507,
    "hash": "e845c721b10b"
+  },
+  {
+   "url": "src/missions/life.js",
+   "size": 2388,
+   "hash": "40be71fb1d66"
+  },
+  {
+   "url": "src/missions/helpers.js",
+   "size": 2221,
+   "hash": "417188050a21"
   },
   {
    "url": "src/systems/InteractionSystem.js",
@@ -285,11 +310,6 @@
    "url": "src/core/Engine.js",
    "size": 1946,
    "hash": "e125c902d615"
-  },
-  {
-   "url": "src/missions/life.js",
-   "size": 1934,
-   "hash": "45aaa8b1d0b2"
   },
   {
    "url": "src/minigames/Shop.js",
@@ -312,14 +332,14 @@
    "hash": "47b12087f803"
   },
   {
+   "url": "src/missions/hub.js",
+   "size": 1319,
+   "hash": "bfb79ef48a8f"
+  },
+  {
    "url": "src/data/characters.js",
    "size": 1246,
    "hash": "0c08a547fe64"
-  },
-  {
-   "url": "src/missions/helpers.js",
-   "size": 1241,
-   "hash": "080edf316cf4"
   },
   {
    "url": "src/core/Debug.js",
@@ -350,11 +370,6 @@
    "url": "src/missions/index.js",
    "size": 449,
    "hash": "14e10209b0ab"
-  },
-  {
-   "url": "src/missions/hub.js",
-   "size": 410,
-   "hash": "0bc8960ee3da"
   }
  ]
 }

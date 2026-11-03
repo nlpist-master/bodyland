@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import * as P from '../world/Props.js';
 import { toon } from '../world/Materials.js';
 import { sortGame } from '../minigames/SortGame.js';
-import { use, missing, take, parts, flag } from './helpers.js';
+import { use, missing, take, parts, flag, board } from './helpers.js';
 
 // Building Factory: collect planks and bolts, run the crane to lower a
 // steel beam over the ravine, lay the planks one by one, cross the new
@@ -133,6 +133,7 @@ export function setup(ctx, zone) {
   use(ctx, {
     x: 0, z: 22.4, radius: 2,
     label: 'למיין מזונות בפס המיון',
+    when: () => !game.quests.step('builders'),
     onUse: async () => {
       const ok = await sortGame(game);
       if (ok) {
@@ -141,6 +142,8 @@ export function setup(ctx, zone) {
       }
     },
   });
+
+  board(ctx, { x: 0, z: 22.4, radius: 2, label: 'לבחור חומרים לדגם הגוף', quest: 'builders', name: 'builders', flagName: 'cModel' });
 
   return {
     update(dt, t) {

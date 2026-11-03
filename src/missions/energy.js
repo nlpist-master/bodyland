@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { ITEMS } from '../data/items.js';
 import { toon } from '../world/Materials.js';
 import { machineFeed } from '../minigames/MachineFeed.js';
-import { use, missing, take, foods, parts, flag } from './helpers.js';
+import { use, missing, take, foods, parts, flag, board } from './helpers.js';
 
 // Energy City: find three parts, repair the generator, feed it energy
 // foods, and the whole city lights up. Then the train and the light race.
@@ -150,7 +150,7 @@ export function setup(ctx, zone) {
   use(ctx, {
     x: -23, y: 0.75, z: -8.6, radius: 1.8,
     label: 'להפעיל את הרכבת',
-    when: () => trainS < 0,
+    when: () => trainS < 0 && !game.quests.step('fuel'),
     onUse: () => {
       if (!flag(ctx, 'ePower')) {
         game.audio.play('fail');
@@ -164,6 +164,8 @@ export function setup(ctx, zone) {
       trainS = 0;
     },
   });
+
+  board(ctx, { x: -23, y: 0.75, z: -8.6, radius: 2, label: 'לתכנן דלק למסע', quest: 'fuel', name: 'fuel', flagName: 'eFuel' });
 
   // ---- Light race ----
   const pad = game.challenge.pad(ctx, {

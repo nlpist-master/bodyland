@@ -259,6 +259,7 @@ export function build(ctx) {
   const portal = S.portal(ctx, { x: 0, z: -33, rotY: 0, color: 0x9b7bff, label: 'מרכז העולם', to: 'hub', onEnter: () => game.travel('hub') });
   npcs.add(ctx, { id: 'pipetin', x: 3.4, z: -23, rotY: Math.PI + 0.5, zone: 'life' });
   npcs.add(ctx, { id: 'kibutzi', x: 9.6, z: -10.6, rotY: Math.PI, zone: 'life' });
+  npcs.add(ctx, { id: 'shriron', x: -3.4, z: 18.6, rotY: 0.4, zone: 'life' });
 
   return {
     title: ZONE_INFO.life.title,

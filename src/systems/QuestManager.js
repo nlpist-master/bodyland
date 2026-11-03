@@ -63,6 +63,13 @@ export class QuestManager {
       }
     }
     for (const id of QUEST_ORDER) {
+      if (this._owesThanks(id, npc, zone)) {
+        this.state[id].thanked = true;
+        this.game.progress.save();
+        return { line: QUESTS[id].thanks };
+      }
+    }
+    for (const id of QUEST_ORDER) {
       const q = QUESTS[id];
       if (q.giver === npc && q.zone === zone && this.canStart(id)) {
         this.start(id);
@@ -70,6 +77,12 @@ export class QuestManager {
       }
     }
     return null;
+  }
+
+  /** A finished mission whose giver has not yet said what came of it. */
+  _owesThanks(id, npc, zone) {
+    const q = QUESTS[id];
+    return q.thanks && q.giver === npc && q.zone === zone && this.isDone(id) && !this.state[id].thanked;
   }
 
   /**
@@ -93,6 +106,7 @@ export class QuestManager {
     for (const id of QUEST_ORDER) {
       const q = QUESTS[id];
       if (q.giver === npc && q.zone === zone && this.canStart(id)) return true;
+      if (this._owesThanks(id, npc, zone)) return true;
       const st = this.step(id);
       if (st && st.type === 'talk' && st.npc === npc && st.zone === zone) return true;
     }
