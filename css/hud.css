@@ -218,7 +218,7 @@ kbd {
 .touch { position: absolute; inset: 0; }
 .joy-zone {
   position: absolute;
-  left: 0;
+  right: 0;
   bottom: 0;
   width: 42%;
   height: 62%;
@@ -227,7 +227,7 @@ kbd {
 }
 .joy-base {
   position: absolute;
-  left: calc(105px + var(--safe-l));
+  left: calc(100% - 105px - var(--safe-r));
   top: calc(100% - 105px - var(--safe-b));
   width: 130px;
   height: 130px;
@@ -239,6 +239,8 @@ kbd {
   transition: opacity 0.15s;
 }
 .joy-base.active { opacity: 1; }
+.joy-base.run { border-color: var(--yellow); background: rgba(255, 210, 63, 0.25); }
+.joy-base.run .joy-knob { background: var(--yellow); }
 .joy-knob {
   position: absolute;
   left: 50%;
@@ -268,10 +270,8 @@ kbd {
 }
 .tbtn svg { width: 46%; height: 46%; }
 .tbtn.down { transform: scale(0.9); opacity: 1; }
-.tbtn-jump { width: 92px; height: 92px; right: calc(22px + var(--safe-r)); bottom: calc(24px + var(--safe-b)); background: var(--pink); }
-.tbtn-act { width: 74px; height: 74px; right: calc(128px + var(--safe-r)); bottom: calc(30px + var(--safe-b)); background: #7d5bd6; }
-.tbtn-run { width: 66px; height: 66px; right: calc(36px + var(--safe-r)); bottom: calc(132px + var(--safe-b)); background: #3a8fd9; }
-.tbtn-run.on { background: var(--teal); border-color: var(--yellow); }
+.tbtn-jump { width: 92px; height: 92px; left: calc(22px + var(--safe-l)); bottom: calc(24px + var(--safe-b)); background: var(--pink); }
+.tbtn-act { width: 74px; height: 74px; left: calc(36px + var(--safe-l)); bottom: calc(132px + var(--safe-b)); background: #7d5bd6; opacity: 0.45; }
 .tbtn-act.ready { background: var(--yellow); color: var(--ink); border-color: var(--white); animation: pulse 0.9s ease-in-out infinite; opacity: 1; }
 @keyframes pulse { 50% { transform: scale(1.1); } }
 

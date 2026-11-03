@@ -18,6 +18,7 @@ const KEYMAP = {
 };
 const PREVENT = new Set(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space']);
 const TOUCH_LOOK_SCALE = 1.5;
+export const RUN_PUSH = 0.92; // joystick push (0..1) that switches walking to running
 
 /** Keep receiving a finger's moves even if it slides off the element. */
 export function capturePointer(el, id) {
@@ -139,7 +140,8 @@ export class Input {
   }
 
   isRunning() {
-    return this.runToggle || this.isHeld('run');
+    const s = this.stick;
+    return this.runToggle || this.isHeld('run') || (s.active && Math.hypot(s.x, s.y) >= RUN_PUSH);
   }
 
   consumeLook() {

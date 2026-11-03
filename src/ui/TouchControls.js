@@ -1,8 +1,9 @@
 import { ICONS } from './icons.js';
-import { capturePointer } from '../core/Input.js';
+import { capturePointer, RUN_PUSH } from '../core/Input.js';
 
 // On-screen controls for phones and tablets: a floating joystick on the
-// left, big buttons on the right. Swiping anywhere else turns the camera.
+// right (the main hand), jump and action buttons on the left. Pushing the
+// joystick all the way runs. Swiping anywhere else turns the camera.
 const STICK_R = 55;
 
 export class TouchControls {
@@ -17,7 +18,6 @@ export class TouchControls {
     el.innerHTML = `
       <div class="joy-zone"><div class="joy-base"><div class="joy-knob"></div></div></div>
       <button class="tbtn tbtn-act" aria-label="פעולה">${ICONS.act}<span>פעולה</span></button>
-      <button class="tbtn tbtn-run" aria-label="ריצה">${ICONS.run}<span>ריצה</span></button>
       <button class="tbtn tbtn-jump" aria-label="קפיצה">${ICONS.jump}<span>קפיצה</span></button>`;
     document.getElementById('ui').appendChild(el);
 
@@ -26,16 +26,10 @@ export class TouchControls {
     this.knob = el.querySelector('.joy-knob');
     this.actBtn = el.querySelector('.tbtn-act');
     this.actLabel = this.actBtn.querySelector('span');
-    this.runBtn = el.querySelector('.tbtn-run');
 
     this._bindStick();
     this._bindHold(el.querySelector('.tbtn-jump'), 'jump');
     this._bindHold(this.actBtn, 'interact');
-    this.runBtn.addEventListener('pointerdown', (e) => {
-      e.preventDefault();
-      input.runToggle = !input.runToggle;
-      this.runBtn.classList.toggle('on', input.runToggle);
-    });
 
     // A touch on a computer with a touch screen turns these controls on.
     if (!enabled) {
@@ -96,6 +90,7 @@ export class TouchControls {
       dy *= STICK_R / len;
     }
     this.knob.style.transform = `translate(${dx}px, ${dy}px)`;
+    this.base.classList.toggle('run', Math.hypot(dx, dy) >= STICK_R * RUN_PUSH);
     const s = this.input.stick;
     s.x = dx / STICK_R;
     s.y = -dy / STICK_R;
@@ -106,7 +101,7 @@ export class TouchControls {
     this.joyId = null;
     this.base.style.left = '';
     this.base.style.top = '';
-    this.base.classList.remove('active');
+    this.base.classList.remove('active', 'run');
     this.knob.style.transform = '';
     const s = this.input.stick;
     s.x = s.y = 0;

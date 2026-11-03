@@ -88,10 +88,21 @@ export class NPCSystem {
   }
 
   talk(n) {
-    // Missions come first: a new one, a step to report, or a reminder.
-    const quest = this.game.quests.talk(n.id, n.zone);
-    const line = quest || n.script.lines[n.idx % n.script.lines.length];
-    if (!quest) n.idx++;
+    // A mission event (new mission, reporting back) is said first. Otherwise
+    // the NPC goes through a fixed rotation: mission explanations, then the
+    // usual lines, and around again, so nothing said can be missed for good.
+    const event = this.game.quests.talk(n.id, n.zone);
+    const cycle = this.game.quests.linesFor(n.id, n.zone).concat(n.script.lines);
+    let line;
+    if (event) {
+      line = event.line;
+      // The explanation was just said: continue with what comes after it.
+      const at = cycle.indexOf(event.line);
+      n.idx = at >= 0 ? at + 1 : 0;
+    } else {
+      line = cycle[n.idx % cycle.length];
+      n.idx = (n.idx % cycle.length) + 1;
+    }
     this._refreshNews();
     this.say(n, line);
     n.npc.animator.play(GESTURES[n.idx % GESTURES.length], 2.2);
@@ -159,7 +170,15 @@ export class NPCSystem {
     const W = innerWidth, H = innerHeight;
     const half = this.bubble.offsetWidth / 2 + 8;
     const x = Math.min(W - half, Math.max(half, ((v.x + 1) / 2) * W));
-    const y = Math.max(this.bubble.offsetHeight + 80, ((1 - v.y) / 2) * H);
+    const bh = this.bubble.offsetHeight + 14;
+    let y = Math.max(bh + 66, ((1 - v.y) / 2) * H);
+    // Messages (toasts) win the top of the screen: slide the bubble below them.
+    const toasts = this.game.ui.toasts;
+    if (toasts.children.length) {
+      const r = toasts.getBoundingClientRect();
+      const overlapX = x + half > r.left && x - half < r.right;
+      if (overlapX && y - bh < r.bottom + 8) y = r.bottom + 8 + bh;
+    }
     this.bubble.style.left = x + 'px';
     this.bubble.style.top = Math.min(H - 20, y) + 'px';
   }

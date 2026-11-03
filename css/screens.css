@@ -206,3 +206,9 @@
 @media (max-height: 480px) and (min-width: 641px) {
   .toasts { top: calc(120px + var(--safe-t)); width: min(46vw, 420px); }
 }
+
+/* Wide screens: messages use the free strip at the very top, between the
+   buttons and the zone title, so they never cover a speech bubble. */
+@media (min-width: 1000px) and (min-height: 481px) {
+  .toasts { top: calc(12px + var(--safe-t)); width: min(38vw, 460px); }
+}

@@ -50,27 +50,42 @@ export class QuestManager {
     return s && s.state === 'active' ? QUESTS[id].steps[s.step] : null;
   }
 
-  /** Called when the player talks to an NPC. Returns what they say, or null. */
+  /**
+   * Called when the player talks to an NPC. Returns { line, started } for a
+   * mission event (new mission, or a "talk to me" step), otherwise null.
+   */
   talk(npc, zone) {
     for (const id of QUEST_ORDER) {
       const st = this.step(id);
       if (st && st.type === 'talk' && st.npc === npc && st.zone === zone) {
         this._advance(id);
-        return st.say;
+        return { line: st.say };
       }
     }
     for (const id of QUEST_ORDER) {
       const q = QUESTS[id];
       if (q.giver === npc && q.zone === zone && this.canStart(id)) {
         this.start(id);
-        return q.intro;
+        return { line: q.intro, started: true };
       }
     }
+    return null;
+  }
+
+  /**
+   * What an NPC repeats about the missions they gave that are still running:
+   * the full explanation, then the current step. Same order every time.
+   */
+  linesFor(npc, zone) {
+    const out = [];
     for (const id of QUEST_ORDER) {
       const q = QUESTS[id];
-      if (q.giver === npc && q.zone === zone && this.status(id) === 'active' && Math.random() < 0.5) return q.remind;
+      if (q.giver !== npc || q.zone !== zone || this.status(id) !== 'active') continue;
+      out.push(q.intro);
+      const st = this.step(id);
+      if (st) out.push('עכשיו צריך: ' + st.text + '.');
     }
-    return null;
+    return out;
   }
 
   /** Does this NPC have a new mission or a mission step waiting? */

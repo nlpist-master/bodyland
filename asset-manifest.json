@@ -1,5 +1,5 @@
 {
- "version": "683268e576",
+ "version": "cad1da279d",
  "files": [
   {
    "url": "vendor/three/three.module.min.js",
@@ -58,8 +58,8 @@
   },
   {
    "url": "css/screens.css",
-   "size": 10531,
-   "hash": "60c3226e6120"
+   "size": 10804,
+   "hash": "0eefc9ae1875"
   },
   {
    "url": "src/world/zones/water.js",
@@ -72,14 +72,9 @@
    "hash": "cac45d1869f8"
   },
   {
-   "url": "src/data/quests.js",
-   "size": 9479,
-   "hash": "9f0bae33a38d"
-  },
-  {
    "url": "css/hud.css",
-   "size": 8729,
-   "hash": "58462baa86f7"
+   "size": 8685,
+   "hash": "a6d231673d7a"
   },
   {
    "url": "src/world/zones/arena.js",
@@ -97,9 +92,14 @@
    "hash": "9a8cfd0abf81"
   },
   {
+   "url": "src/data/quests.js",
+   "size": 8387,
+   "hash": "ae874e489518"
+  },
+  {
    "url": "src/ui/UIManager.js",
-   "size": 8229,
-   "hash": "cd5df11e5c5a"
+   "size": 8201,
+   "hash": "432e7e45b77f"
   },
   {
    "url": "src/world/Props.js",
@@ -122,14 +122,19 @@
    "hash": "4f6ff2584d87"
   },
   {
+   "url": "src/systems/NPCSystem.js",
+   "size": 6405,
+   "hash": "b2459033fbd1"
+  },
+  {
    "url": "src/missions/construction.js",
    "size": 5796,
    "hash": "40a8c9c9cf50"
   },
   {
-   "url": "src/systems/NPCSystem.js",
-   "size": 5583,
-   "hash": "b493fbedadf4"
+   "url": "src/systems/QuestManager.js",
+   "size": 5534,
+   "hash": "e3024425d7d7"
   },
   {
    "url": "src/systems/AudioManager.js",
@@ -157,11 +162,6 @@
    "hash": "abeb59cc0194"
   },
   {
-   "url": "src/systems/QuestManager.js",
-   "size": 5097,
-   "hash": "aa19302c47b2"
-  },
-  {
    "url": "src/ui/screens.js",
    "size": 5078,
    "hash": "263e73a17c88"
@@ -187,14 +187,14 @@
    "hash": "c97ff2d7be5f"
   },
   {
+   "url": "src/core/Input.js",
+   "size": 4772,
+   "hash": "4ee60fdcb847"
+  },
+  {
    "url": "src/missions/jungle.js",
    "size": 4659,
    "hash": "8615f1d6a6d5"
-  },
-  {
-   "url": "src/core/Input.js",
-   "size": 4609,
-   "hash": "32d07611efc2"
   },
   {
    "url": "src/missions/water.js",
@@ -227,14 +227,14 @@
    "hash": "980c46808537"
   },
   {
-   "url": "src/ui/TouchControls.js",
-   "size": 4139,
-   "hash": "d87592cf70d4"
-  },
-  {
    "url": "src/minigames/SortGame.js",
    "size": 3993,
    "hash": "9ad2387d9050"
+  },
+  {
+   "url": "src/ui/TouchControls.js",
+   "size": 3965,
+   "hash": "caa0411e8d4b"
   },
   {
    "url": "src/minigames/PipePuzzle.js",
