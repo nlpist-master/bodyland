@@ -10,8 +10,10 @@ const CLIMB = 2.6;
 const COYOTE = 0.12;
 const JUMP_BUFFER = 0.15;
 const BACK = 2.6;        // car steering: reverse speed
-const TURN = 2.9;        // car steering: turn rate (radians per second)
-const STICK_DEAD = 0.18; // car steering: small sideways pushes don't turn
+const TURN = 2.9;        // car steering: turn rate on keys (radians per second)
+const TURN_STICK = 1.6;  // car steering: top turn rate on the joystick; a phone screen spins fast
+const STICK_CURVE = 1.3; // car steering: part-way pushes turn gently
+const STICK_DEAD = 0.25; // car steering: small sideways pushes don't turn
 
 const TAU = Math.PI * 2;
 const wrap = (a) => a - TAU * Math.floor((a + Math.PI) / TAU);
@@ -102,7 +104,8 @@ export class PlayerController {
     if (this.climb) {
       this._climbStep(dt, wx * mag, wz * mag);
     } else {
-      const speed = mag * (this.reversing ? BACK : input.isRunning() ? RUN : WALK);
+      // A bounce throws you forward: rising from one carries at running speed.
+      const speed = mag * (this.reversing ? BACK : input.isRunning() || this.bounced ? RUN : WALK);
       const k = 1 - Math.exp(-(this.grounded ? 12 : 4) * dt);
       this.vel.x += (wx * speed - this.vel.x) * k;
       this.vel.z += (wz * speed - this.vel.z) * k;
@@ -157,21 +160,22 @@ export class PlayerController {
 
   /** Car steering: returns the move direction and amount, and turns the character. */
   _carMove(dt, input, frozen) {
-    let x, y;
+    let x, y, rate = TURN;
     const st = input.stick;
     if (st.active) {
       // Ignore a slight sideways drift when the stick is pushed "about forward".
       const ax = Math.abs(st.x);
-      x = ax < STICK_DEAD ? 0 : Math.sign(st.x) * (ax - STICK_DEAD) / (1 - STICK_DEAD);
+      x = ax < STICK_DEAD ? 0 : Math.sign(st.x) * ((ax - STICK_DEAD) / (1 - STICK_DEAD)) ** STICK_CURVE;
       y = Math.abs(st.y) < 0.12 ? 0 : st.y;
+      rate = TURN_STICK;
     } else {
       x = (input.isHeld('right') ? 1 : 0) - (input.isHeld('left') ? 1 : 0);
       y = (input.isHeld('up') ? 1 : 0) - (input.isHeld('down') ? 1 : 0);
     }
     if (frozen) x = y = 0;
     // Turning eases in and out so the camera behind doesn't jerk.
-    const want = this.climb ? 0 : -x * TURN;
-    this.turnVel += (want - this.turnVel) * (1 - Math.exp(-12 * dt));
+    const want = this.climb ? 0 : -x * rate;
+    this.turnVel += (want - this.turnVel) * (1 - Math.exp(-(st.active ? 7 : 12) * dt));
     this.facing = wrap(this.facing + this.turnVel * dt);
     this.reversing = y < 0 && !this.climb;
     const sign = y < 0 ? -1 : 1;

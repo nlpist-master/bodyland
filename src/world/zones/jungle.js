@@ -109,7 +109,7 @@ function treePlatform(ctx) {
       ctx.root.add(dot);
     }
   };
-  mush(2, 16.3, 1.2, 0.5, 0xff5d6c);
+  mush(2.2, 17.3, 1.2, 0.5, 0xff5d6c);
   mush(-4, 17, 1.0, 0.4, 0xff9b2f);
   P.cylinder(ctx, { x: 3, z: 22, r: 0.7, h: 4.4, color: 0x8a5a3a });
   P.cylinder(ctx, { x: 3, z: 22, y: 4.4, r: 2.6, h: 0.35, color: 0x43b552 });
