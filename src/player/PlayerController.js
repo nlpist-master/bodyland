@@ -9,12 +9,18 @@ const BOUNCE = 15.5;
 const CLIMB = 2.6;
 const COYOTE = 0.12;
 const JUMP_BUFFER = 0.15;
+const BACK = 2.6;        // car steering: reverse speed
+const TURN = 2.9;        // car steering: turn rate (radians per second)
+const STICK_DEAD = 0.18; // car steering: small sideways pushes don't turn
 
 const TAU = Math.PI * 2;
 const wrap = (a) => a - TAU * Math.floor((a + Math.PI) / TAU);
 
 // Third-person character movement: walk, run, jump (hold for higher),
 // ladders, bounce pads, and respawn after falling off the world.
+// Two steering modes (pause menu): "car" - forward/back moves along the way
+// the character faces and left/right turns it; "free" - moves toward where
+// the stick or keys point, relative to the camera.
 export class PlayerController {
   constructor(game, character) {
     this.game = game;
@@ -28,6 +34,9 @@ export class PlayerController {
     this.grounded = false;
     this.ground = null;
     this.facing = 0;
+    this.car = true;
+    this.turnVel = 0;
+    this.reversing = false;
     this.coyote = 0;
     this.jumpBuffer = 0;
     this.climb = null;
@@ -69,17 +78,22 @@ export class PlayerController {
     const frozen = this.celebrateTime > 0 && this.grounded;
     this.celebrateTime -= dt;
 
-    const mv = input.getMove();
-    const s = Math.sin(camYaw), c = Math.cos(camYaw);
-    // Camera forward = (s, 0, c), camera right = (-c, 0, s).
-    let wx = -c * mv.x + s * mv.y;
-    let wz = s * mv.x + c * mv.y;
-    let mag = Math.min(1, Math.hypot(wx, wz));
-    if (frozen) mag = 0;
-    if (mag > 1e-3) {
-      const inv = 1 / Math.hypot(wx, wz);
-      wx *= inv;
-      wz *= inv;
+    this.car = this.game.progress.data.settings.steer !== 'free';
+    let wx, wz, mag;
+    if (this.car) [wx, wz, mag] = this._carMove(dt, input, frozen);
+    else {
+      const mv = input.getMove();
+      const s = Math.sin(camYaw), c = Math.cos(camYaw);
+      // Camera forward = (s, 0, c), camera right = (-c, 0, s).
+      wx = -c * mv.x + s * mv.y;
+      wz = s * mv.x + c * mv.y;
+      mag = Math.min(1, Math.hypot(wx, wz));
+      if (frozen) mag = 0;
+      if (mag > 1e-3) {
+        const inv = 1 / Math.hypot(wx, wz);
+        wx *= inv;
+        wz *= inv;
+      }
     }
 
     if (input.consume('jump') && !frozen) this.jumpBuffer = JUMP_BUFFER;
@@ -88,7 +102,7 @@ export class PlayerController {
     if (this.climb) {
       this._climbStep(dt, wx * mag, wz * mag);
     } else {
-      const speed = mag * (input.isRunning() ? RUN : WALK);
+      const speed = mag * (this.reversing ? BACK : input.isRunning() ? RUN : WALK);
       const k = 1 - Math.exp(-(this.grounded ? 12 : 4) * dt);
       this.vel.x += (wx * speed - this.vel.x) * k;
       this.vel.z += (wz * speed - this.vel.z) * k;
@@ -121,9 +135,9 @@ export class PlayerController {
 
       if (mag > 0.3) {
         const ladder = collision.findClimb(this.pos, this.radius);
-        if (ladder && -(wx * ladder.nx + wz * ladder.nz) > 0.55 && this.pos.y < ladder.maxY - 0.3) this._startClimb(ladder);
+        if (ladder && !this.reversing && -(wx * ladder.nx + wz * ladder.nz) > 0.55 && this.pos.y < ladder.maxY - 0.3) this._startClimb(ladder);
       }
-      if (mag > 0.1 && !this.climb) {
+      if (mag > 0.1 && !this.climb && !this.car) {
         this.facing += wrap(Math.atan2(wx, wz) - this.facing) * (1 - Math.exp(-14 * dt));
       }
 
@@ -139,6 +153,29 @@ export class PlayerController {
 
     this._animate(dt);
     this._sync();
+  }
+
+  /** Car steering: returns the move direction and amount, and turns the character. */
+  _carMove(dt, input, frozen) {
+    let x, y;
+    const st = input.stick;
+    if (st.active) {
+      // Ignore a slight sideways drift when the stick is pushed "about forward".
+      const ax = Math.abs(st.x);
+      x = ax < STICK_DEAD ? 0 : Math.sign(st.x) * (ax - STICK_DEAD) / (1 - STICK_DEAD);
+      y = Math.abs(st.y) < 0.12 ? 0 : st.y;
+    } else {
+      x = (input.isHeld('right') ? 1 : 0) - (input.isHeld('left') ? 1 : 0);
+      y = (input.isHeld('up') ? 1 : 0) - (input.isHeld('down') ? 1 : 0);
+    }
+    if (frozen) x = y = 0;
+    // Turning eases in and out so the camera behind doesn't jerk.
+    const want = this.climb ? 0 : -x * TURN;
+    this.turnVel += (want - this.turnVel) * (1 - Math.exp(-12 * dt));
+    this.facing = wrap(this.facing + this.turnVel * dt);
+    this.reversing = y < 0 && !this.climb;
+    const sign = y < 0 ? -1 : 1;
+    return [Math.sin(this.facing) * sign, Math.cos(this.facing) * sign, Math.min(1, Math.abs(y))];
   }
 
   _startClimb(ladder) {
@@ -201,8 +238,15 @@ export class PlayerController {
     else if (!this.grounded) state = this.vel.y > -2.5 ? 'jump' : 'fall';
     else if (this.celebrateTime > 0) state = 'dance';
     else state = hs > 5.4 ? 'run' : hs > 0.35 ? 'walk' : 'idle';
+    let speed = hs;
+    if (state === 'walk' && this.car && this.vel.x * Math.sin(this.facing) + this.vel.z * Math.cos(this.facing) < 0) {
+      speed = -hs; // stepping backward: the legs swing the other way
+    } else if (state === 'idle' && this.car && Math.abs(this.turnVel) > 0.8) {
+      state = 'walk'; // small steps while turning on the spot
+      speed = 1.3;
+    }
     this.state = state;
-    this.char.animator.update(dt, state, hs, this.vel.y);
+    this.char.animator.update(dt, state, speed, this.vel.y);
   }
 
   _sync() {

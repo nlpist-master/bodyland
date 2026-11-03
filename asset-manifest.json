@@ -1,5 +1,5 @@
 {
- "version": "cad1da279d",
+ "version": "16d25859f6",
  "files": [
   {
    "url": "vendor/three/three.module.min.js",
@@ -72,6 +72,21 @@
    "hash": "cac45d1869f8"
   },
   {
+   "url": "src/player/PlayerController.js",
+   "size": 9236,
+   "hash": "a59b4f3ceff2"
+  },
+  {
+   "url": "src/ui/UIManager.js",
+   "size": 9209,
+   "hash": "162fcb752d6c"
+  },
+  {
+   "url": "src/Game.js",
+   "size": 8775,
+   "hash": "aac0ebce5d95"
+  },
+  {
    "url": "css/hud.css",
    "size": 8685,
    "hash": "a6d231673d7a"
@@ -82,11 +97,6 @@
    "hash": "872929549926"
   },
   {
-   "url": "src/Game.js",
-   "size": 8558,
-   "hash": "41fddd61c83a"
-  },
-  {
    "url": "src/characters/CharacterBuilder.js",
    "size": 8546,
    "hash": "9a8cfd0abf81"
@@ -95,11 +105,6 @@
    "url": "src/data/quests.js",
    "size": 8387,
    "hash": "ae874e489518"
-  },
-  {
-   "url": "src/ui/UIManager.js",
-   "size": 8201,
-   "hash": "432e7e45b77f"
   },
   {
    "url": "src/world/Props.js",
@@ -115,11 +120,6 @@
    "url": "src/boot.js",
    "size": 7234,
    "hash": "c2f9943dc1ee"
-  },
-  {
-   "url": "src/player/PlayerController.js",
-   "size": 7094,
-   "hash": "4f6ff2584d87"
   },
   {
    "url": "src/systems/NPCSystem.js",
@@ -263,8 +263,8 @@
   },
   {
    "url": "src/player/CameraController.js",
-   "size": 2517,
-   "hash": "5d170e0e1779"
+   "size": 2842,
+   "hash": "7c37bd9470e5"
   },
   {
    "url": "src/core/Quality.js",
@@ -298,8 +298,8 @@
   },
   {
    "url": "src/systems/ProgressManager.js",
-   "size": 1595,
-   "hash": "7155dc066758"
+   "size": 1619,
+   "hash": "3ad07c9c95f3"
   },
   {
    "url": "src/systems/Inventory.js",

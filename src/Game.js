@@ -188,6 +188,13 @@ export class Game {
     this.progress.save();
   }
 
+  /** Switch between car steering and free (camera-relative) steering. */
+  toggleSteer() {
+    const s = this.progress.data.settings;
+    s.steer = s.steer === 'free' ? 'car' : 'free';
+    this.progress.save();
+  }
+
   toggleFullscreen() {
     if (document.fullscreenElement) document.exitFullscreen?.();
     else document.documentElement.requestFullscreen?.().catch(() => {});

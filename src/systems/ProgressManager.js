@@ -8,7 +8,7 @@ function defaults() {
     character: null,
     zone: null,
     visited: {},
-    settings: { quality: 'auto', sound: true },
+    settings: { quality: 'auto', sound: true, steer: 'car' },
     flags: {},
     coins: 0,
     stars: 0,
@@ -56,7 +56,7 @@ export class ProgressManager {
     this.save();
   }
 
-  /** Start over. Settings (quality, sound) are kept. */
+  /** Start over. Settings (quality, sound, steering) are kept. */
   reset() {
     const settings = this.data.settings;
     this.data = defaults();

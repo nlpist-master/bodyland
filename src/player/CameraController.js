@@ -47,9 +47,14 @@ export class CameraController {
     t.z += (player.pos.z - t.z) * k;
     t.y += (player.pos.y + TARGET_H - t.y) * ky;
 
-    // Gently swing behind the player while walking, unless the player is steering the camera.
     const hs = Math.hypot(player.vel.x, player.vel.z);
-    if (this.idle > 1.2 && hs > 1 && !player.climb) {
+    if (player.car) {
+      // Car steering: stay behind the character, also while turning on the
+      // spot or reversing. After looking around, swing back behind.
+      const back = this.idle > 0.9 ? 7 : 0;
+      if (back) this.yaw = wrap(this.yaw + wrap(player.facing - this.yaw) * (1 - Math.exp(-back * dt)));
+    } else if (this.idle > 1.2 && hs > 1 && !player.climb) {
+      // Gently swing behind the player while walking, unless the player is steering the camera.
       const diff = wrap(player.facing - this.yaw);
       if (Math.abs(diff) < 1.0) this.yaw += diff * (1 - Math.exp(-0.25 * hs * dt));
     }

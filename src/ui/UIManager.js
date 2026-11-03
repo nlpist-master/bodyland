@@ -5,9 +5,22 @@ import { openInventory, openQuests, openMap } from './screens.js';
 // HTML overlay: top bar, interaction prompt, toasts, fade, pause and help.
 const QUALITY_NAMES = { auto: 'אוטומטי', high: 'גבוהה', medium: 'בינונית', low: 'נמוכה' };
 
-const HELP_KEYS = `
-  <ul class="keys">
-    <li><span dir="ltr"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> / <kbd>↑</kbd><kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd></span>הליכה</li>
+const MOVE_KEYS = {
+  car: `
+    <li><span dir="ltr"><kbd>W</kbd> / <kbd>↑</kbd></span>הליכה קדימה</li>
+    <li><span dir="ltr"><kbd>A</kbd><kbd>D</kbd> / <kbd>←</kbd><kbd>→</kbd></span>סיבוב ימינה ושמאלה</li>
+    <li><span dir="ltr"><kbd>S</kbd> / <kbd>↓</kbd></span>נסיעה לאחור</li>`,
+  free: `
+    <li><span dir="ltr"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> / <kbd>↑</kbd><kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd></span>הליכה</li>`,
+};
+const MOVE_TOUCH = {
+  car: `
+    <li><span>ג'ויסטיק מימין</span>קדימה: הליכה · הצידה: סיבוב · אחורה: נסיעה לאחור. דחיפה קדימה עד הסוף: ריצה</li>`,
+  free: `
+    <li><span>ג'ויסטיק מימין</span>הליכה. דחיפה עד הסוף: ריצה</li>`,
+};
+const HELP_KEYS = (steer) => `
+  <ul class="keys">${MOVE_KEYS[steer]}
     <li><span><kbd>Shift</kbd></span>ריצה (להחזיק)</li>
     <li><span><kbd>רווח</kbd></span>קפיצה – החזיקו לקפיצה גבוהה</li>
     <li><span><kbd>E</kbd></span>פעולה: לדבר, להפעיל מכונות ועוד</li>
@@ -15,9 +28,8 @@ const HELP_KEYS = `
     <li><span>גרירת עכבר</span>סיבוב המצלמה · גלגלת – זום</li>
     <li><span><kbd>Esc</kbd></span>השהיה</li>
   </ul>`;
-const HELP_TOUCH = `
-  <ul class="keys">
-    <li><span>ג'ויסטיק מימין</span>הליכה. דחיפה עד הסוף: ריצה</li>
+const HELP_TOUCH = (steer) => `
+  <ul class="keys">${MOVE_TOUCH[steer]}
     <li><span>החלקה על המסך</span>סיבוב המצלמה</li>
     <li><span>קפיצה (משמאל)</span>החזיקו לקפיצה גבוהה</li>
     <li><span>פעולה (משמאל)</span>נדלק כשיש משהו להפעיל</li>
@@ -60,6 +72,7 @@ export class UIManager {
             <button class="btn small ghost" data-act="quality"></button>
             <button class="btn small ghost" data-act="sound"></button>
           </div>
+          <button class="btn small ghost" data-act="steer"></button>
           <button class="btn small ghost" data-act="fullscreen">מסך מלא</button>
           <button class="btn small ghost danger" data-act="newgame">משחק חדש</button>
         </div>
@@ -86,6 +99,7 @@ export class UIManager {
     this.fadeEl = q('.fade');
     this.qualityBtn = q('[data-act="quality"]');
     this.soundBtn = q('[data-act="sound"]');
+    this.steerBtn = q('[data-act="steer"]');
 
     const fsBtn = q('[data-act="fullscreen"]');
     if (!document.documentElement.requestFullscreen) fsBtn.remove();
@@ -119,6 +133,7 @@ export class UIManager {
       else if (act === 'character') game.openCharacterSelect();
       else if (act === 'quality') game.cycleQuality();
       else if (act === 'sound') game.toggleSound();
+      else if (act === 'steer') game.toggleSteer();
       else if (act === 'fullscreen') game.toggleFullscreen();
       else if (act === 'newgame') {
         // Ask twice so nobody erases their progress by accident.
@@ -137,6 +152,7 @@ export class UIManager {
     const s = this.game.progress.data.settings;
     this.qualityBtn.textContent = 'גרפיקה: ' + QUALITY_NAMES[s.quality];
     this.soundBtn.textContent = 'צלילים: ' + (s.sound ? 'פועלים' : 'כבויים');
+    this.steerBtn.textContent = 'שליטה: ' + (s.steer === 'free' ? 'חופשית' : 'כמו רכב');
   }
 
   showHUD(on) {
@@ -181,7 +197,8 @@ export class UIManager {
 
   showHelp(on) {
     if (on) {
-      this.helpEl.querySelector('.help-keys').innerHTML = this.game.touch.enabled ? HELP_TOUCH : HELP_KEYS;
+      const steer = this.game.progress.data.settings.steer === 'free' ? 'free' : 'car';
+      this.helpEl.querySelector('.help-keys').innerHTML = (this.game.touch.enabled ? HELP_TOUCH : HELP_KEYS)(steer);
       this.pauseEl.classList.add('hidden');
     }
     this.helpEl.classList.toggle('hidden', !on);
