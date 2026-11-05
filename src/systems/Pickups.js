@@ -90,6 +90,8 @@ export class Pickups {
     if (p.key) this.game.progress.data.picked[p.key] = true;
     inventory.add(p.item);
     audio.play('pickup');
+    this.game.effects.burst(p.x, p.y + 0.85, p.z, { n: 8 });
+    this.game.player.char.animator.land(2);
     const def = ITEMS[p.item];
     if (!p.quiet) ui.toast(`בתיק: ${def.icon} ${def.name}`, 'small');
     p.onPick?.(p);
@@ -107,12 +109,14 @@ export class Pickups {
     const c = this.coins;
     if (!c) return;
     c.q.setFromAxisAngle(THREE.Object3D.DEFAULT_UP, t * 3);
+    const reach = this.game.progress.data.upgrades.magnet ? 9 : 0.9;
     for (let i = 0; i < c.list.length; i++) {
       const k = c.list[i];
       if (!k.taken) {
         const dx = pos.x - k.x, dz = pos.z - k.z, dy = pos.y + 0.9 - k.y;
-        if (dx * dx + dz * dz < 0.9 && Math.abs(dy) < 1.4) {
+        if (dx * dx + dz * dz < reach && Math.abs(dy) < 1.4) {
           k.taken = true;
+          this.game.effects.burst(k.x, k.y, k.z, { n: 5, speed: 2 });
           this.game.progress.data.picked[k.key] = true;
           this.game.inventory.addCoins(1);
           this.game.audio.play('coin');

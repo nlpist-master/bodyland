@@ -162,6 +162,8 @@ export class QuestManager {
       if (r.stars) this.game.inventory.addStars(r.stars);
       audio.play('success');
       this.game.player?.celebrate(2);
+      const p = this.game.player?.pos;
+      if (p) for (const color of ['gold', 'pink', 'teal']) this.game.effects.burst(p.x, p.y + 1.2, p.z, { color, n: 6, speed: 4 });
       ui.toast(`משימה הושלמה: ${q.title}! פרס: ${r.coins} 🪙${r.stars ? ` · ${r.stars} ⭐` : ''}`, 'good');
     } else {
       audio.play('step-done');

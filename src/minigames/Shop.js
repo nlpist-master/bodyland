@@ -2,7 +2,7 @@ import { ITEMS } from '../data/items.js';
 import { html } from '../ui/Panel.js';
 
 // The grocery shop in the City of Life: spend coins on food.
-const GOODS = [
+export const GOODS = [
   ['bread', 3], ['cheese', 4], ['tomato', 2], ['egg', 3], ['yogurt', 3], ['lentils', 3],
   ['rice', 3], ['pasta', 3], ['carrot', 2], ['apple', 2], ['banana', 2], ['nuts', 4],
 ];

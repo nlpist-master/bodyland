@@ -106,6 +106,17 @@ export class Animator {
         t.bodyY = Math.abs(Math.sin(time * 4.5)) * 0.03;
         break;
       }
+      case 'use': {
+        // Reaching out with both hands, a little busy: pressing, turning.
+        const u = Math.sin(time * 12);
+        t.armLX = -1.5 + u * 0.15;
+        t.armRX = -1.5 - u * 0.15;
+        t.armLZ = 0.12;
+        t.armRZ = -0.12;
+        t.torsoX = 0.14;
+        t.headX = 0.12;
+        break;
+      }
       case 'dance': {
         const d = time * 7;
         t.bodyY = Math.abs(Math.sin(d)) * 0.13;

@@ -1,4 +1,5 @@
-import { board, station, flag } from './helpers.js';
+import { use, board, station, flag } from './helpers.js';
+import { openWorkshop } from '../minigames/Workshop.js';
 import { openEnding } from '../ui/Story.js';
 
 // World center: coins around the heart fountain and on Mochi's balcony, the
@@ -12,6 +13,9 @@ export function setup(ctx) {
   }
   coins.push([-3.4, 3.6, 24.4], [3.4, 3.6, 24.4], [0, 3.6, 31.8], [-4.2, 3.6, 28.5]);
   ctx.pickups.addCoins(ctx, 'hub', coins);
+
+  station(ctx, { x: 6, z: -8.6, color: 0xffb300, text: 'סדנת השדרוגים', bg: '#e08a00' });
+  use(ctx, { x: 6, z: -7.8, radius: 2.2, label: 'להיכנס לסדנת השדרוגים', onUse: () => openWorkshop(game) });
 
   station(ctx, { x: 2.4, z: 20.8, color: 0x2fd6c3, text: 'לוח בקרה', bg: '#17a596', rotY: Math.PI });
   board(ctx, {

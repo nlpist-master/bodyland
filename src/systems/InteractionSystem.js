@@ -54,6 +54,7 @@ export class InteractionSystem {
 
     if (input.consume('interact') && best) {
       if (best.once) best.enabled = false;
+      player.act();
       best.onInteract(best);
       this._setCurrent(null);
     }

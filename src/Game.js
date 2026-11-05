@@ -13,7 +13,10 @@ import { Inventory } from './systems/Inventory.js';
 import { QuestManager } from './systems/QuestManager.js';
 import { Pickups } from './systems/Pickups.js';
 import { Challenge } from './systems/Challenge.js';
+import { Achievements } from './systems/Achievements.js';
+import { Effects } from './systems/Effects.js';
 import { Panel } from './ui/Panel.js';
+import { MainMenu } from './ui/MainMenu.js';
 import { openStory } from './ui/Story.js';
 import { openInventory, openQuests, openMap } from './ui/screens.js';
 import { AudioManager } from './systems/AudioManager.js';
@@ -25,7 +28,7 @@ import { CHARACTER_BY_ID } from './data/characters.js';
 import { ZONE_INFO } from './data/zones.js';
 
 // Wires all systems together and runs the high-level game states:
-// 'select' (character select), 'loading' and 'play'.
+// 'menu' (opening screen), 'select' (character select), 'loading' and 'play'.
 export class Game {
   constructor() {
     this.progress = new ProgressManager();
@@ -47,11 +50,19 @@ export class Game {
     this.panel = new Panel(this);
     this.cameraCtl = new CameraController(this.engine.camera, this.input, this.collision);
     this.select = new CharacterSelect(this);
+    this.menu = new MainMenu(this);
+    this.achievements = new Achievements(this);
+    this.effects = new Effects(this.engine.scene);
     this.player = null;
     this.state = 'boot';
     this.modal = null;
 
     this.engine.onUpdate = (dt, t) => this.update(dt, t);
+    // Leaving the app (a call, another tab) pauses the game and its sounds.
+    document.addEventListener('visibilitychange', () => {
+      this.audio.setSuspended(document.hidden);
+      if (document.hidden && this.state === 'play' && !this.modal) this.togglePause();
+    });
     this.engine.onContextLost = () => this.ui.toast('הגרפיקה הופסקה. רעננו את הדף כדי להמשיך.');
     if (DEBUG) {
       this.debug = new DebugOverlay(this);
@@ -61,14 +72,30 @@ export class Game {
   }
 
   async init(boot) {
-    this.openCharacterSelect();
+    this.achievements.check(true);
+    this.openMenu();
     boot.progress(0.5, 'מכין את הדמויות...');
     this.engine.compile();
     this.engine.start();
   }
 
+  /** The opening screen, over the character podiums. */
+  openMenu() {
+    this.openCharacterSelect();
+    this.state = 'menu';
+    this.select.setVisible(false);
+    this.menu.show();
+  }
+
+  continueGame() {
+    this.menu.hide();
+    this.state = 'select';
+    this.startPlay(this.progress.data.character);
+  }
+
   openCharacterSelect() {
     this.state = 'select';
+    this.menu.hide();
     this.panel.close();
     this.challenge.clear();
     this.setModal(null);
@@ -79,6 +106,7 @@ export class Game {
       this.player.detach();
       this.player = null;
     }
+    this.select.close();
     this.select.open(this.progress.data.character || 'dvori', (id) => this.startPlay(id));
   }
 
@@ -203,8 +231,9 @@ export class Game {
 
   update(dt, t) {
     const input = this.input;
-    if (this.state === 'select') {
-      this.select.update(dt, t);
+    if (this.state === 'select' || this.state === 'menu') {
+      if (this.state === 'menu') this.menu.update();
+      this.select.update(dt, this.state === 'menu');
       this.world.update(dt, t);
     } else if (this.state === 'play') {
       if (input.consume('pause')) {
@@ -227,6 +256,8 @@ export class Game {
         this.pickups.update(dt, t);
         this.challenge.update(dt);
         this.quests.update(dt);
+        this.achievements.update(dt);
+        this.effects.update(dt);
         this.world.update(dt, t);
         this.cameraCtl.update(dt, this.player);
         this._followSun();

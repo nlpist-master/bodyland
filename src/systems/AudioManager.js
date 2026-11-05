@@ -29,6 +29,13 @@ export class AudioManager {
     return true;
   }
 
+  /** While the game is in the background, nothing should keep sounding. */
+  setSuspended(on) {
+    if (!this.ctx) return;
+    if (on) this.ctx.suspend();
+    else this.ctx.resume();
+  }
+
   setEnabled(on) {
     this.enabled = on;
     if (this.master) this.master.gain.value = on ? 0.55 : 0;
@@ -141,6 +148,9 @@ export class AudioManager {
       case 'fail':
         this._tone('triangle', 330, 220, 0.25, 0.16);
         this._tone('triangle', 262, 196, 0.35, 0.14, 0.18);
+        break;
+      case 'badge':
+        [659, 880, 1175].forEach((f, i) => this._tone('sine', f, 0, 0.3, 0.14, i * 0.07));
         break;
       case 'tick':
         this._tone('sine', 1200, 1600, 0.08, 0.15);

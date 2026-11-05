@@ -234,3 +234,22 @@
 .confetti { position: fixed; inset: 0; overflow: hidden; pointer-events: none; }
 .confetti i { position: absolute; top: -14px; width: 10px; height: 14px; border-radius: 2px; animation: confetti 3.2s linear infinite; }
 @keyframes confetti { to { transform: translateY(110vh) rotate(540deg); } }
+
+/* Main menu */
+.menu-screen { position: absolute; inset: 0; z-index: 4; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: calc(16px + var(--safe-t)) 16px calc(16px + var(--safe-b)); background: radial-gradient(ellipse at center, rgba(42, 27, 77, 0.55), rgba(42, 27, 77, 0.88)); pointer-events: auto; }
+.menu-btns { display: flex; flex-direction: column; gap: 12px; width: min(340px, 100%); }
+.menu-btns .row { display: flex; gap: 10px; }
+.menu-btns .row .btn { flex: 1; }
+@media (max-height: 480px) {
+  .menu-screen .logo { font-size: 34px; }
+  .menu-screen .tagline { margin-bottom: 4px; font-size: 15px; }
+  .menu-btns { gap: 8px; }
+  .menu-btns .btn.big { font-size: 18px; padding: 9px 20px; }
+}
+
+/* Achievements */
+.badges { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+.badge { background: rgba(0, 0, 0, 0.2); border-radius: 14px; padding: 8px 10px; display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; opacity: 0.55; filter: grayscale(1); }
+.badge.on { opacity: 1; filter: none; background: rgba(255, 210, 63, 0.18); border: 2px solid var(--yellow); }
+.badge b { font-size: 14px; }
+.badge small { font-size: 12px; opacity: 0.85; }

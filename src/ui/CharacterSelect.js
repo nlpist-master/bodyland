@@ -78,12 +78,19 @@ export class CharacterSelect {
     this.onChoose(CHARACTERS[this.index].id);
   }
 
-  update(dt) {
+  setVisible(on) {
+    this.el?.classList.toggle('hidden', !on);
+  }
+
+  /** idle: the main menu is on top, so the keys are not for us. */
+  update(dt, idle = false) {
     const input = this.game.input;
-    // Index 0 is the rightmost card, so "left" moves to a higher index.
-    if (input.consume('left')) this.select(this.index + 1);
-    if (input.consume('right')) this.select(this.index - 1);
-    if (input.consume('confirm') || input.consume('jump')) return this.confirm();
+    if (!idle) {
+      // Index 0 is the rightmost card, so "left" moves to a higher index.
+      if (input.consume('left')) this.select(this.index + 1);
+      if (input.consume('right')) this.select(this.index - 1);
+      if (input.consume('confirm') || input.consume('jump')) return this.confirm();
+    }
     this._placeCamera();
 
     const k = 1 - Math.exp(-8 * dt);

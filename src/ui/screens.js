@@ -1,9 +1,59 @@
 import { ITEMS, GROUPS } from '../data/items.js';
 import { QUESTS, QUEST_ORDER } from '../data/quests.js';
 import { ZONE_INFO, ZONE_ORDER } from '../data/zones.js';
+import { ACHIEVEMENTS } from '../data/achievements.js';
 import { html } from './Panel.js';
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+const QUALITY_NAMES = { auto: 'אוטומטי', high: 'גבוהה', medium: 'בינונית', low: 'נמוכה' };
+
+/** The labels of the settings buttons, here and in the pause menu. */
+export function settingText(s) {
+  return {
+    quality: 'גרפיקה: ' + QUALITY_NAMES[s.quality],
+    sound: 'צלילים: ' + (s.sound ? 'פועלים' : 'כבויים'),
+    steer: 'שליטה: ' + (s.steer === 'free' ? 'חופשית' : 'כמו רכב'),
+  };
+}
+
+export function openSettings(game) {
+  game.panel.open({
+    title: 'הגדרות',
+    kind: 'settings',
+    render(body, close) {
+      const rows = { quality: () => game.cycleQuality(), sound: () => game.toggleSound(), steer: () => game.toggleSteer() };
+      for (const key in rows) {
+        const b = html('<button class="btn alt"></button>');
+        const draw = () => { b.textContent = settingText(game.progress.data.settings)[key]; };
+        b.addEventListener('click', () => {
+          game.audio.play('click');
+          rows[key]();
+          draw();
+        });
+        draw();
+        body.appendChild(b);
+      }
+      const done = html('<button class="btn big">סיימתי</button>');
+      done.addEventListener('click', () => close());
+      body.appendChild(done);
+    },
+  });
+}
+
+export function openAchievements(game, onClose) {
+  game.panel.open({
+    title: 'ההישגים שלי',
+    kind: 'achievements',
+    onClose,
+    render(body) {
+      const { achievements, inventory } = game;
+      body.appendChild(html(`<div class="wallet"><span>🏅 ${achievements.count} מתוך ${ACHIEVEMENTS.length}</span><span>⭐ ${inventory.stars} כוכבים</span><span>🪙 ${inventory.coins} מטבעות</span></div>`));
+      const grid = ACHIEVEMENTS.map((a) => `<div class="badge${achievements.has(a.id) ? ' on' : ''}"><span class="ico">${a.icon}</span><b>${esc(a.title)}</b><small>${esc(a.text)}</small></div>`).join('');
+      body.appendChild(html(`<div class="badges">${grid}</div>`));
+    },
+  });
+}
 
 /** Backpack: everything collected, tap an item to learn what it does. */
 export function openInventory(game) {

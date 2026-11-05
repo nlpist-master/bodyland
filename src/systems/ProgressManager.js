@@ -16,10 +16,12 @@ function defaults() {
     seen: {},       // item ids ever collected
     picked: {},     // one-time pickups already taken (coins, parts)
     quests: {},     // quest id -> { state: 'active' | 'done', step }
+    upgrades: {},   // upgrades bought in the workshop
+    achievements: {},
   };
 }
 
-const OBJECTS = ['visited', 'flags', 'inventory', 'seen', 'picked', 'quests'];
+const OBJECTS = ['visited', 'flags', 'inventory', 'seen', 'picked', 'quests', 'upgrades', 'achievements'];
 
 export class ProgressManager {
   constructor() {
@@ -37,6 +39,7 @@ export class ProgressManager {
     if (saved && saved.version === VERSION) {
       this.data = { ...d, ...saved, settings: { ...d.settings, ...saved.settings } };
       for (const k of OBJECTS) this.data[k] = { ...saved[k] };
+      for (const k of ['coins', 'stars']) if (!Number.isFinite(this.data[k])) this.data[k] = 0;
     } else {
       this.data = d;
     }

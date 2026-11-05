@@ -46,6 +46,7 @@ export class PlayerController {
     this.lastSafe = new THREE.Vector3();
     this.safeTimer = 0;
     this.celebrateTime = 0;
+    this.actTime = 0;
     this.respawning = false;
 
     this.shadow = blobShadow();
@@ -74,9 +75,17 @@ export class PlayerController {
     this.celebrateTime = seconds;
   }
 
+  /** Reach out to a machine or a friend for a moment. */
+  act(seconds = 0.45) {
+    this.actTime = seconds;
+  }
+
   update(dt, camYaw) {
     if (this.respawning) return;
-    const { input, collision, audio } = this.game;
+    const { input, collision, audio, effects } = this.game;
+    const up = this.game.progress.data.upgrades;
+    const boost = up.boots ? 1.12 : 1;
+    this.actTime -= dt;
     const frozen = this.celebrateTime > 0 && this.grounded;
     this.celebrateTime -= dt;
 
@@ -105,14 +114,14 @@ export class PlayerController {
       this._climbStep(dt, wx * mag, wz * mag);
     } else {
       // A bounce throws you forward: rising from one carries at running speed.
-      const speed = mag * (this.reversing ? BACK : input.isRunning() || this.bounced ? RUN : WALK);
+      const speed = mag * boost * (this.reversing ? BACK : input.isRunning() || this.bounced ? RUN : WALK);
       const k = 1 - Math.exp(-(this.grounded ? 12 : 4) * dt);
       this.vel.x += (wx * speed - this.vel.x) * k;
       this.vel.z += (wz * speed - this.vel.z) * k;
 
       this.coyote = this.grounded ? COYOTE : this.coyote - dt;
       if (this.jumpBuffer > 0 && this.coyote > 0) {
-        this.vel.y = JUMP;
+        this.vel.y = up.spring ? JUMP * 1.1 : JUMP;
         this.grounded = false;
         this.coyote = 0;
         this.jumpBuffer = 0;
@@ -126,6 +135,7 @@ export class PlayerController {
       if (res.landed) {
         this.char.animator.land(res.impact);
         if (res.impact > 5) audio.play('land', Math.min(1, res.impact / 16));
+        if (res.impact > 9) effects.dust(this.pos.x, this.pos.y, this.pos.z, res.impact > 14 ? 10 : 6);
       }
       if (this.grounded && this.ground?.tag === 'bounce') {
         this.vel.y = BOUNCE;
@@ -134,6 +144,7 @@ export class PlayerController {
         this.coyote = 0;
         this.char.animator.land(6);
         audio.play('boing');
+        effects.burst(this.pos.x, this.pos.y + 0.1, this.pos.z, { color: 'pink', n: 8 });
       }
 
       if (mag > 0.3) {
@@ -241,6 +252,7 @@ export class PlayerController {
     if (this.climb) state = 'climb';
     else if (!this.grounded) state = this.vel.y > -2.5 ? 'jump' : 'fall';
     else if (this.celebrateTime > 0) state = 'dance';
+    else if (this.actTime > 0 && hs < 1) state = 'use';
     else state = hs > 5.4 ? 'run' : hs > 0.35 ? 'walk' : 'idle';
     let speed = hs;
     if (state === 'walk' && this.car && this.vel.x * Math.sin(this.facing) + this.vel.z * Math.cos(this.facing) < 0) {

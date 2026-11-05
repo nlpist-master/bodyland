@@ -1,9 +1,8 @@
 import { ICONS } from './icons.js';
 import { HUD } from './HUD.js';
-import { openInventory, openQuests, openMap } from './screens.js';
+import { openInventory, openQuests, openMap, openAchievements, settingText } from './screens.js';
 
 // HTML overlay: top bar, interaction prompt, toasts, fade, pause and help.
-const QUALITY_NAMES = { auto: 'אוטומטי', high: 'גבוהה', medium: 'בינונית', low: 'נמוכה' };
 
 const MOVE_KEYS = {
   car: `
@@ -68,12 +67,14 @@ export class UIManager {
           <button class="btn big" data-act="resume">ממשיכים לשחק</button>
           <button class="btn alt" data-act="help">איך משחקים?</button>
           <button class="btn alt" data-act="character">החלפת דמות</button>
+          <button class="btn small ghost" data-act="achievements">הישגים</button>
           <div class="row">
             <button class="btn small ghost" data-act="quality"></button>
             <button class="btn small ghost" data-act="sound"></button>
           </div>
           <button class="btn small ghost" data-act="steer"></button>
           <button class="btn small ghost" data-act="fullscreen">מסך מלא</button>
+          <button class="btn small ghost" data-act="menu">לתפריט הראשי</button>
           <button class="btn small ghost danger" data-act="newgame">משחק חדש</button>
         </div>
       </div>
@@ -134,6 +135,8 @@ export class UIManager {
       else if (act === 'quality') game.cycleQuality();
       else if (act === 'sound') game.toggleSound();
       else if (act === 'steer') game.toggleSteer();
+      else if (act === 'achievements') { this.showPause(false); openAchievements(game, () => game.togglePause()); }
+      else if (act === 'menu') game.openMenu();
       else if (act === 'fullscreen') game.toggleFullscreen();
       else if (act === 'newgame') {
         // Ask twice so nobody erases their progress by accident.
@@ -149,10 +152,10 @@ export class UIManager {
   }
 
   refreshSettings() {
-    const s = this.game.progress.data.settings;
-    this.qualityBtn.textContent = 'גרפיקה: ' + QUALITY_NAMES[s.quality];
-    this.soundBtn.textContent = 'צלילים: ' + (s.sound ? 'פועלים' : 'כבויים');
-    this.steerBtn.textContent = 'שליטה: ' + (s.steer === 'free' ? 'חופשית' : 'כמו רכב');
+    const t = settingText(this.game.progress.data.settings);
+    this.qualityBtn.textContent = t.quality;
+    this.soundBtn.textContent = t.sound;
+    this.steerBtn.textContent = t.steer;
   }
 
   showHUD(on) {

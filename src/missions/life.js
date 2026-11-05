@@ -1,4 +1,4 @@
-import { openShop } from '../minigames/Shop.js';
+import { openShop, GOODS } from '../minigames/Shop.js';
 import { use, missing, take, flag, board } from './helpers.js';
 
 // City of Life: buy groceries with the coins you collected, put them in
@@ -6,6 +6,7 @@ import { use, missing, take, flag, board } from './helpers.js';
 // playground obstacle course.
 
 const GROCERIES = [['bread', 1], ['cheese', 1], ['tomato', 1]];
+const PRICES = Object.fromEntries(GOODS);
 const COURSE = [[-13.5, 1.3, 11.5], [-23, 3.3, 11], [-21.5, 1.3, 17.2], [-26.5, 1.3, 12], [-17.5, 1.3, 20.5], [-12.5, 1.3, 15.5]];
 
 export function setup(ctx) {
@@ -20,7 +21,15 @@ export function setup(ctx) {
   use(ctx, {
     x: 17.2, z: -6.4, radius: 2.2,
     label: 'לקנות במכולת',
-    onUse: () => openShop(game),
+    onUse: () => {
+      // Whoever spent everything can still finish the mission: a friend helps out.
+      const cost = GROCERIES.reduce((sum, [id]) => sum + (game.inventory.count(id) ? 0 : PRICES[id]), 0);
+      if (game.quests.step('shopping')?.type === 'collect' && game.inventory.coins < cost) {
+        game.inventory.addCoins(cost - game.inventory.coins);
+        game.ui.toast('קיבוצי השלים לכם מטבעות למצרכים. חברים עוזרים!', 'good');
+      }
+      openShop(game);
+    },
   });
 
   use(ctx, {
