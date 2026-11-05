@@ -201,7 +201,7 @@ export function build(ctx) {
   blink.position.y = 1.5;
   antenna.add(mast, blink);
   root.add(antenna);
-  P.sign(ctx, { x: 3.2, z: 19.4, text: 'מרכז הפיקוד', bg: '#d93a7d', rotY: Math.PI });
+  P.sign(ctx, { x: 2.5, z: 14.2, text: 'מרכז הפיקוד', bg: '#d93a7d', rotY: Math.PI });
 
   // ---- Benches, lamps and floating cells ----
   for (const [x, z, r] of [[-6, -1, 0.6], [6, -1, -0.6], [-7, 9, 2.5], [7, 9, -2.5]]) S.bench(ctx, { x, z, rotY: r, color: 0xff9b54 });

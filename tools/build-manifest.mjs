@@ -7,7 +7,7 @@ import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
-const INCLUDE = ['index.html', 'css', 'src', 'vendor', 'assets'];
+const INCLUDE = ['index.html', 'favicon.ico', 'favicon-32x32.png', 'site.webmanifest', 'css', 'src', 'vendor', 'assets'];
 const IGNORE = /(^|\/)(\.|LICENSE|.*\.txt$|.*\.md$)/;
 
 function walk(path, out) {

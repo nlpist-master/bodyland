@@ -1,5 +1,5 @@
 {
- "version": "8231d472a1",
+ "version": "933ca5a189",
  "files": [
   {
    "url": "vendor/three/three.module.min.js",
@@ -67,9 +67,14 @@
    "hash": "c801b5b73714"
   },
   {
+   "url": "favicon.ico",
+   "size": 11646,
+   "hash": "1096d98eb939"
+  },
+  {
    "url": "src/world/zones/hub.js",
    "size": 11027,
-   "hash": "a30ce4f01cf4"
+   "hash": "741dd1f286fe"
   },
   {
    "url": "src/player/PlayerController.js",
@@ -262,6 +267,11 @@
    "hash": "4651cb19aaec"
   },
   {
+   "url": "favicon-32x32.png",
+   "size": 3403,
+   "hash": "83897e167dcd"
+  },
+  {
    "url": "src/world/WorldManager.js",
    "size": 3347,
    "hash": "9b92244f01da"
@@ -342,6 +352,11 @@
    "hash": "4c841960a6b1"
   },
   {
+   "url": "index.html",
+   "size": 1691,
+   "hash": "eeddbd4ea310"
+  },
+  {
    "url": "src/missions/hub.js",
    "size": 1612,
    "hash": "3bc64906e570"
@@ -350,11 +365,6 @@
    "url": "src/systems/Inventory.js",
    "size": 1572,
    "hash": "ebeb461ee3ae"
-  },
-  {
-   "url": "index.html",
-   "size": 1438,
-   "hash": "47b12087f803"
   },
   {
    "url": "src/data/characters.js",
@@ -395,6 +405,11 @@
    "url": "src/missions/index.js",
    "size": 449,
    "hash": "14e10209b0ab"
+  },
+  {
+   "url": "site.webmanifest",
+   "size": 426,
+   "hash": "18d896f189e0"
   }
  ]
 }
