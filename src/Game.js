@@ -109,7 +109,6 @@ export class Game {
   /** A child was chosen: their menu, or the characters if they have none yet. */
   _playerReady() {
     this.achievements.check(true);
-    this.ui.refreshSettings();
     this.ui.hudLogic.refresh();
     this.players.hide();
     if (this.menu.hasSave) {
@@ -252,7 +251,6 @@ export class Game {
   /** Erase this child's progress and go back to character select. */
   newGame() {
     this.progress.reset();
-    this.ui.refreshSettings();
     this.ui.hudLogic.refresh();
     this.openCharacterSelect();
   }

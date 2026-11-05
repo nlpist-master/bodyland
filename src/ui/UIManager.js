@@ -1,6 +1,6 @@
 import { ICONS } from './icons.js';
 import { HUD } from './HUD.js';
-import { openInventory, openQuests, openMap, openAchievements, settingText } from './screens.js';
+import { openInventory, openQuests, openMap, openAchievements, openSettings } from './screens.js';
 
 // HTML overlay: top bar, interaction prompt, toasts, fade, pause and help.
 
@@ -62,20 +62,22 @@ export class UIManager {
       <div class="prompt hidden"><kbd>E</kbd><span></span></div>
       <div class="toasts"></div>
       <div class="modal pause hidden">
-        <div class="panel">
-          <h2>המשחק מושהה</h2>
-          <button class="btn big" data-act="resume">ממשיכים לשחק</button>
-          <button class="btn alt" data-act="help">איך משחקים?</button>
-          <button class="btn alt" data-act="character">החלפת דמות</button>
-          <button class="btn small ghost" data-act="achievements">הישגים</button>
-          <div class="row">
-            <button class="btn small ghost" data-act="quality"></button>
-            <button class="btn small ghost" data-act="sound"></button>
+        <div class="panel pause-panel">
+          <h2>הפסקה</h2>
+          <div class="pause-row">
+            <button class="btn pause-main" data-act="resume">${ICONS.play}<span>ממשיכים לשחק</span></button>
+            <button class="btn ghost danger" data-act="newgame">${ICONS.restart}<span>משחק חדש</span></button>
           </div>
-          <button class="btn small ghost" data-act="steer"></button>
-          <button class="btn small ghost" data-act="fullscreen">מסך מלא</button>
-          <button class="btn small ghost" data-act="menu">לתפריט הראשי</button>
-          <button class="btn small ghost danger" data-act="newgame">משחק חדש</button>
+          <p class="pause-warn hidden">כל ההתקדמות תימחק</p>
+          <div class="pause-row">
+            <button class="btn ghost" data-act="achievements">${ICONS.medal}<span>הישגים</span></button>
+            <button class="btn ghost" data-act="help">${ICONS.help}<span>איך משחקים?</span></button>
+            <button class="btn ghost" data-act="character">${ICONS.person}<span>החלפת דמות</span></button>
+          </div>
+          <div class="pause-row">
+            <button class="btn ghost" data-act="settings">${ICONS.gear}<span>הגדרות</span></button>
+            <button class="btn ghost" data-act="menu">${ICONS.home}<span>תפריט ראשי</span></button>
+          </div>
         </div>
       </div>
       <div class="modal help hidden">
@@ -98,12 +100,7 @@ export class UIManager {
     this.pauseEl = q('.modal.pause');
     this.helpEl = q('.modal.help');
     this.fadeEl = q('.fade');
-    this.qualityBtn = q('[data-act="quality"]');
-    this.soundBtn = q('[data-act="sound"]');
-    this.steerBtn = q('[data-act="steer"]');
-
-    const fsBtn = q('[data-act="fullscreen"]');
-    if (!document.documentElement.requestFullscreen) fsBtn.remove();
+    this.pauseWarn = q('.pause-warn');
 
     q('.pause-btn').addEventListener('click', (e) => {
       e.currentTarget.blur();
@@ -132,30 +129,19 @@ export class UIManager {
       else if (act === 'help') this.showHelp(true);
       else if (act === 'close-help') game.resume();
       else if (act === 'character') game.openCharacterSelect();
-      else if (act === 'quality') game.cycleQuality();
-      else if (act === 'sound') game.toggleSound();
-      else if (act === 'steer') game.toggleSteer();
+      else if (act === 'settings') { this.showPause(false); openSettings(game, { inGame: true, onClose: () => game.togglePause() }); }
       else if (act === 'achievements') { this.showPause(false); openAchievements(game, () => game.togglePause()); }
       else if (act === 'menu') game.openMenu();
-      else if (act === 'fullscreen') game.toggleFullscreen();
       else if (act === 'newgame') {
         // Ask twice so nobody erases their progress by accident.
         if (btn.classList.contains('confirm')) game.newGame();
         else {
           btn.classList.add('confirm');
-          btn.textContent = 'בטוחים? כל ההתקדמות תימחק. לחצו שוב';
+          btn.lastChild.textContent = 'לחצו שוב';
+          this.pauseWarn.classList.remove('hidden');
         }
       }
-      this.refreshSettings();
     });
-    this.refreshSettings();
-  }
-
-  refreshSettings() {
-    const t = settingText(this.game.progress.data.settings);
-    this.qualityBtn.textContent = t.quality;
-    this.soundBtn.textContent = t.sound;
-    this.steerBtn.textContent = t.steer;
   }
 
   showHUD(on) {
@@ -194,8 +180,8 @@ export class UIManager {
   showPause(on) {
     this.pauseEl.classList.toggle('hidden', !on);
     this.newGameBtn.classList.remove('confirm');
-    this.newGameBtn.textContent = 'משחק חדש';
-    if (on) this.refreshSettings();
+    this.newGameBtn.lastChild.textContent = 'משחק חדש';
+    this.pauseWarn.classList.add('hidden');
   }
 
   showHelp(on) {

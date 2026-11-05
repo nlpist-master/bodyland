@@ -3,12 +3,13 @@ import { QUESTS, QUEST_ORDER } from '../data/quests.js';
 import { ZONE_INFO, ZONE_ORDER } from '../data/zones.js';
 import { ACHIEVEMENTS } from '../data/achievements.js';
 import { html } from './Panel.js';
+import { ICONS } from './icons.js';
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 
 const QUALITY_NAMES = { auto: 'אוטומטי', high: 'גבוהה', medium: 'בינונית', low: 'נמוכה' };
 
-/** The labels of the settings buttons, here and in the pause menu. */
+/** The labels of the settings buttons. */
 export function settingText(s) {
   return {
     quality: 'גרפיקה: ' + QUALITY_NAMES[s.quality],
@@ -17,39 +18,49 @@ export function settingText(s) {
   };
 }
 
-export function openSettings(game) {
+/** inGame: opened from the pause menu, where a player can't be renamed or erased. */
+export function openSettings(game, { inGame = false, onClose } = {}) {
   game.panel.open({
     title: 'הגדרות',
     kind: 'settings',
+    onClose,
     render(body, close) {
-      const rows = { quality: () => game.cycleQuality(), sound: () => game.toggleSound(), steer: () => game.toggleSteer() };
-      for (const key in rows) {
-        const b = html('<button class="btn alt"></button>');
-        const draw = () => { b.textContent = settingText(game.progress.data.settings)[key]; };
+      const add = (kind, icon, onClick) => {
+        const b = html(`<button class="btn ${kind} set-btn">${ICONS[icon]}<span></span></button>`);
         b.addEventListener('click', () => {
           game.audio.play('click');
-          rows[key]();
-          draw();
+          onClick(b);
         });
-        draw();
         body.appendChild(b);
+        return b;
+      };
+      const rows = [
+        ['sound', 'sound', () => game.toggleSound()],
+        ['steer', 'wheel', () => game.toggleSteer()],
+        ['quality', 'picture', () => game.cycleQuality()],
+      ];
+      for (const [key, icon, change] of rows) {
+        const draw = (b) => { b.lastChild.textContent = settingText(game.progress.data.settings)[key]; };
+        draw(add('alt', icon, (b) => {
+          change();
+          draw(b);
+        }));
       }
-      const rename = html('<button class="btn ghost">שינוי שם</button>');
-      rename.addEventListener('click', () => {
-        game.audio.play('click');
-        game.askNewName();
-      });
-      const remove = html('<button class="btn ghost danger">מחיקת שחקן</button>');
-      remove.addEventListener('click', () => {
-        game.audio.play('click');
-        // Ask twice so nobody erases a player by accident.
-        if (remove.classList.contains('confirm')) return game.deletePlayer();
-        remove.classList.add('confirm');
-        remove.textContent = `בטוחים? השחקן ${game.progress.data.name} יימחק עם כל ההתקדמות. לחצו שוב`;
-      });
+      if (document.documentElement.requestFullscreen) {
+        add('alt', 'fullscreen', () => game.toggleFullscreen()).lastChild.textContent = 'מסך מלא';
+      }
+      if (!inGame) {
+        add('ghost', 'pencil', () => game.askNewName()).lastChild.textContent = 'שינוי שם';
+        add('ghost danger', 'trash', (b) => {
+          // Ask twice so nobody erases a player by accident.
+          if (b.classList.contains('confirm')) return game.deletePlayer();
+          b.classList.add('confirm');
+          b.lastChild.textContent = `בטוחים? השחקן ${game.progress.data.name} יימחק עם כל ההתקדמות. לחצו שוב`;
+        }).lastChild.textContent = 'מחיקת שחקן';
+      }
       const done = html('<button class="btn big">סיימתי</button>');
       done.addEventListener('click', () => close());
-      body.append(rename, remove, done);
+      body.appendChild(done);
     },
   });
 }

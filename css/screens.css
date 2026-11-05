@@ -281,3 +281,19 @@
   .player-card { padding: 5px; }
   .name-input { padding: 6px 12px; font-size: 19px; }
 }
+
+/* Pause menu */
+.pause-panel { gap: 10px; }
+.pause-row { display: flex; gap: 10px; }
+.pause-row .btn { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 10px 4px; font-size: 14px; line-height: 1.15; }
+.pause-row .btn svg, .set-btn svg { flex: none; width: 24px; height: 24px; }
+.pause-row .pause-main { flex: 2.2; flex-direction: row; gap: 10px; padding: 12px 8px; font-size: 20px; }
+.pause-warn { margin: 0; text-align: center; font: 700 15px var(--font); color: var(--yellow); }
+.set-btn { display: flex; align-items: center; justify-content: center; gap: 10px; line-height: 1.2; }
+@media (max-height: 480px) {
+  .pause-panel { padding: 10px 16px 14px; gap: 7px; }
+  .pause-panel h2 { margin: 0; font-size: 20px; }
+  .pause-row .btn { flex-direction: row; gap: 6px; padding: 8px 4px; }
+  .pause-row .btn svg { width: 20px; height: 20px; }
+  .pause-row .pause-main { font-size: 17px; padding: 9px 8px; }
+}

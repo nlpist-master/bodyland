@@ -1,5 +1,5 @@
 {
- "version": "2b95c1229a",
+ "version": "d331584186",
  "files": [
   {
    "url": "vendor/three/three.module.min.js",
@@ -22,14 +22,14 @@
    "hash": "65bc8c65415d"
   },
   {
+   "url": "css/screens.css",
+   "size": 16805,
+   "hash": "cf0fbb571f7d"
+  },
+  {
    "url": "src/characters/NPCs.js",
    "size": 16053,
    "hash": "9f1fdd2374e6"
-  },
-  {
-   "url": "css/screens.css",
-   "size": 15819,
-   "hash": "c3481db76052"
   },
   {
    "url": "src/data/quests.js",
@@ -68,8 +68,8 @@
   },
   {
    "url": "src/Game.js",
-   "size": 11764,
-   "hash": "774b33c93936"
+   "size": 11702,
+   "hash": "1f11f1f69f7b"
   },
   {
    "url": "favicon.ico",
@@ -98,8 +98,8 @@
   },
   {
    "url": "src/ui/UIManager.js",
-   "size": 9327,
-   "hash": "ac668b757c6d"
+   "size": 8938,
+   "hash": "413bb5aa56d1"
   },
   {
    "url": "css/hud.css",
@@ -122,6 +122,11 @@
    "hash": "9a8cfd0abf81"
   },
   {
+   "url": "src/ui/screens.js",
+   "size": 8252,
+   "hash": "4b278f6246be"
+  },
+  {
    "url": "src/world/Props.js",
    "size": 8074,
    "hash": "7dcd5007ab86"
@@ -130,11 +135,6 @@
    "url": "src/missions/energy.js",
    "size": 8046,
    "hash": "ee3105a56234"
-  },
-  {
-   "url": "src/ui/screens.js",
-   "size": 7834,
-   "hash": "9c1bb403bdc2"
   },
   {
    "url": "src/boot.js",
@@ -332,6 +332,11 @@
    "hash": "417188050a21"
   },
   {
+   "url": "src/ui/icons.js",
+   "size": 2155,
+   "hash": "c71a42fd35d7"
+  },
+  {
    "url": "src/minigames/Workshop.js",
    "size": 2128,
    "hash": "cfccf8a2a277"
@@ -395,11 +400,6 @@
    "url": "src/world/zones/selectStage.js",
    "size": 858,
    "hash": "a125b9358f78"
-  },
-  {
-   "url": "src/ui/icons.js",
-   "size": 819,
-   "hash": "65737bcd0f01"
   },
   {
    "url": "src/main.js",
