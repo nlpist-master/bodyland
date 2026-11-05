@@ -1,5 +1,5 @@
 {
- "version": "d331584186",
+ "version": "ea87d54f33",
  "files": [
   {
    "url": "vendor/three/three.module.min.js",
@@ -23,8 +23,8 @@
   },
   {
    "url": "css/screens.css",
-   "size": 16805,
-   "hash": "cf0fbb571f7d"
+   "size": 17536,
+   "hash": "676142e20ade"
   },
   {
    "url": "src/characters/NPCs.js",
@@ -33,8 +33,8 @@
   },
   {
    "url": "src/data/quests.js",
-   "size": 13921,
-   "hash": "826fbbde8be6"
+   "size": 14277,
+   "hash": "eeaed33b538e"
   },
   {
    "url": "src/world/zones/energy.js",
@@ -75,6 +75,11 @@
    "url": "favicon.ico",
    "size": 11646,
    "hash": "1096d98eb939"
+  },
+  {
+   "url": "src/ui/screens.js",
+   "size": 11271,
+   "hash": "14b439c1fc0b"
   },
   {
    "url": "src/world/zones/hub.js",
@@ -122,11 +127,6 @@
    "hash": "9a8cfd0abf81"
   },
   {
-   "url": "src/ui/screens.js",
-   "size": 8252,
-   "hash": "4b278f6246be"
-  },
-  {
    "url": "src/world/Props.js",
    "size": 8074,
    "hash": "7dcd5007ab86"
@@ -148,8 +148,8 @@
   },
   {
    "url": "src/systems/QuestManager.js",
-   "size": 6215,
-   "hash": "29f082a94a80"
+   "size": 6295,
+   "hash": "eb1985fcafba"
   },
   {
    "url": "src/missions/construction.js",
@@ -307,14 +307,14 @@
    "hash": "7c37bd9470e5"
   },
   {
+   "url": "src/data/achievements.js",
+   "size": 2751,
+   "hash": "ecee76735045"
+  },
+  {
    "url": "src/ui/MainMenu.js",
    "size": 2640,
    "hash": "bc9a99bf1bb2"
-  },
-  {
-   "url": "src/data/achievements.js",
-   "size": 2579,
-   "hash": "7a7bb82e01c7"
   },
   {
    "url": "src/core/Quality.js",
@@ -388,8 +388,8 @@
   },
   {
    "url": "src/data/zones.js",
-   "size": 969,
-   "hash": "3e4d5ce43ecf"
+   "size": 986,
+   "hash": "991071225b23"
   },
   {
    "url": "src/systems/Achievements.js",

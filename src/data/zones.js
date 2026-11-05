@@ -1,7 +1,7 @@
 // The hub and the five zones of BIOVERSE (plus the training arena).
 // color: portal color, bg: sign color.
 export const ZONE_INFO = {
-  hub: { title: 'מרכז העולם – BIOVERSE', short: 'מרכז העולם' },
+  hub: { title: 'מרכז העולם – BIOVERSE', short: 'מרכז העולם', color: 0x2fd6c3 },
   energy: { title: 'עיר האנרגיה', short: 'עיר האנרגיה', color: 0xffb300, bg: '#e08a00' },
   construction: { title: 'מפעל הבנייה', short: 'מפעל הבנייה', color: 0xff7b54, bg: '#e0603a' },
   jungle: { title: "ג'ונגל הצבעים", short: "ג'ונגל הצבעים", color: 0x4cbf5a, bg: '#2e9e3e' },

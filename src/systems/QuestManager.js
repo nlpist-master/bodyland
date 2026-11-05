@@ -32,6 +32,10 @@ export class QuestManager {
     return this.status(id) === 'done';
   }
 
+  get isDoneAll() {
+    return QUEST_ORDER.every((id) => this.isDone(id));
+  }
+
   canStart(id) {
     const q = QUESTS[id];
     return !this.status(id) && (!q.after || this.isDone(q.after));

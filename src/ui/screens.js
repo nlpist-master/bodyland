@@ -2,10 +2,20 @@ import { ITEMS, GROUPS } from '../data/items.js';
 import { QUESTS, QUEST_ORDER } from '../data/quests.js';
 import { ZONE_INFO, ZONE_ORDER } from '../data/zones.js';
 import { ACHIEVEMENTS } from '../data/achievements.js';
+import { NPC_INFO } from '../data/npcs.js';
 import { html } from './Panel.js';
 import { ICONS } from './icons.js';
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+const zoneColor = (id) => '#' + ZONE_INFO[id].color.toString(16).padStart(6, '0');
+
+/** A card with a picture: the same look for achievements and missions. */
+function tile({ icon, title, lines = [], cls = '', color = '' }) {
+  const style = color ? ` style="--c:${color}"` : '';
+  const small = lines.map((l) => `<small>${esc(l)}</small>`).join('');
+  return `<div class="tile ${cls}"${style}><span class="ico">${icon}</span><b>${esc(title)}</b>${small}</div>`;
+}
 
 const QUALITY_NAMES = { auto: 'אוטומטי', high: 'גבוהה', medium: 'בינונית', low: 'נמוכה' };
 
@@ -73,8 +83,15 @@ export function openAchievements(game, onClose) {
     render(body) {
       const { achievements, inventory } = game;
       body.appendChild(html(`<div class="wallet"><span>🏅 ${achievements.count} מתוך ${ACHIEVEMENTS.length}</span><span>⭐ ${inventory.stars} כוכבים</span><span>🪙 ${inventory.coins} מטבעות</span></div>`));
-      const grid = ACHIEVEMENTS.map((a) => `<div class="badge${achievements.has(a.id) ? ' on' : ''}"><span class="ico">${a.icon}</span><b>${esc(a.title)}</b><small>${esc(a.text)}</small></div>`).join('');
-      body.appendChild(html(`<div class="badges">${grid}</div>`));
+      const earned = (a) => (achievements.has(a.id) ? 1 : 0);
+      const grid = [...ACHIEVEMENTS].sort((a, b) => earned(b) - earned(a)).map((a) => tile({
+        icon: a.icon,
+        title: a.title,
+        lines: [a.text, a.zone ? ZONE_INFO[a.zone].short : 'כל העולם'],
+        cls: earned(a) ? 'got' : 'off',
+        color: a.zone ? zoneColor(a.zone) : '',
+      })).join('');
+      body.appendChild(html(`<div class="tiles">${grid}</div>`));
     },
   });
 }
@@ -111,36 +128,85 @@ export function openInventory(game) {
   });
 }
 
-/** Mission log: active missions with their steps, then finished ones. */
+const WORLDS = ['hub', ...ZONE_ORDER];
+const KIND_RANK = { main: 0, side: 1, challenge: 2 };
+const KIND_NAME = { main: 'ראשית', side: 'בונוס', challenge: 'אתגר זמן' };
+
+/** A running mission, with all its steps. */
+function runningTile(game, id) {
+  const { quests } = game;
+  const q = QUESTS[id];
+  const cur = quests.state[id].step;
+  const steps = q.steps.map((st, i) => {
+    const { n, m } = i === cur ? quests.progress(st) : { n: 0, m: 1 };
+    const cls = i < cur ? 'done' : i === cur ? 'now' : 'later';
+    return `<li class="${cls}">${i < cur ? '✔' : i === cur ? '➜' : '○'} ${esc(st.text)}${i === cur && m > 1 ? ` <small>(${n}/${m})</small>` : ''}</li>`;
+  }).join('');
+  return `<div class="tile running k-${q.kind}"><span class="ico">${q.icon}</span><b>${esc(q.title)}</b>
+    <small>${KIND_NAME[q.kind]} · בביצוע</small><ul>${steps}</ul></div>`;
+}
+
+function missionTile(game, id) {
+  const { quests } = game;
+  const q = QUESTS[id];
+  if (quests.status(id) === 'active') return runningTile(game, id);
+  const kind = `k-${q.kind}`;
+  const base = { icon: q.icon, title: q.title };
+  if (quests.isDone(id)) return tile({ ...base, lines: [KIND_NAME[q.kind], '✔ הושלם'], cls: `got ${kind}` });
+  if (quests.canStart(id)) return tile({ ...base, lines: [KIND_NAME[q.kind], 'דברו עם ' + NPC_INFO[q.giver].name], cls: `ready ${kind}` });
+  return tile({ ...base, lines: [KIND_NAME[q.kind], '🔒 עוד מעט'], cls: `off ${kind}` });
+}
+
+/** The top of the missions screen: what to do next. */
+function nowCard(game, id) {
+  const { quests } = game;
+  if (quests.isDoneAll) return '<p class="empty">כל המשימות הושלמו! איזה יופי!</p>';
+  if (!id) return '<p class="empty">דברו עם החברים בעולם כדי לקבל משימה חדשה!</p>';
+  const q = QUESTS[id];
+  const st = quests.step(id);
+  const { n, m } = quests.progress(st);
+  return `<div class="now-card"><span class="ico">${q.icon}</span><div>
+    <span class="tag">עכשיו</span><b>${esc(q.title)}</b>
+    <small>השלב הבא: ${esc(st.text)}${m > 1 ? ` (${n}/${m})` : ''}</small></div></div>`;
+}
+
+/** Missions by world: what to do now on top, one world open at a time. */
 export function openQuests(game) {
   game.panel.open({
     title: 'המשימות שלי',
     kind: 'quests',
     render(body) {
       const { quests } = game;
-      const active = QUEST_ORDER.filter((id) => quests.status(id) === 'active');
-      const done = QUEST_ORDER.filter((id) => quests.isDone(id));
-      if (!active.length && !done.length) {
-        body.appendChild(html('<p class="empty">עוד אין משימות. דברו עם פרופסור פיפטין במרכז העולם!</p>'));
-      }
-      for (const id of active) {
-        const q = QUESTS[id];
-        const cur = quests.state[id].step;
-        const steps = q.steps.map((st, i) => {
-          const { n, m } = i === cur ? quests.progress(st) : { n: 0, m: 1 };
-          const cls = i < cur ? 'done' : i === cur ? 'now' : 'later';
-          return `<li class="${cls}">${i < cur ? '✔' : i === cur ? '➜' : '○'} ${esc(st.text)}${i === cur && m > 1 ? ` <small>(${n}/${m})</small>` : ''}</li>`;
-        }).join('');
-        body.appendChild(html(`<div class="quest q-${q.kind}">
-          <div class="q-head"><b>${esc(q.title)}</b><span>${esc(ZONE_INFO[q.zone].short)}</span></div>
-          <ul>${steps}</ul></div>`));
-      }
-      if (done.length) {
-        body.appendChild(html(`<h3>הושלמו (${done.length})</h3>`));
-        body.appendChild(html(`<div class="done-list">${done.map((id) => `<span>✔ ${esc(QUESTS[id].title)}</span>`).join('')}</div>`));
-      }
-      const hint = game.touch.enabled ? '' : '<p class="note">J – פתיחה וסגירה של המשימות</p>';
-      if (hint) body.appendChild(html(hint));
+      const here = game.world.id;
+      const tracked = quests.tracked(here);
+      const doneCount = QUEST_ORDER.filter((id) => quests.isDone(id)).length;
+      body.appendChild(html(`<div class="wallet"><span>🏁 ${doneCount} מתוך ${QUEST_ORDER.length} הושלמו</span></div>`));
+      body.appendChild(html(nowCard(game, tracked)));
+
+      let open = WORLDS.includes(here) ? here : tracked ? QUESTS[tracked].zone : 'hub';
+      const list = html('<div class="worlds"></div>');
+      const draw = () => {
+        list.innerHTML = '';
+        for (const zone of WORLDS) {
+          const ids = QUEST_ORDER.filter((id) => QUESTS[id].zone === zone)
+            .sort((a, b) => KIND_RANK[QUESTS[a].kind] - KIND_RANK[QUESTS[b].kind]);
+          const done = ids.filter((id) => quests.isDone(id)).length;
+          const isOpen = zone === open;
+          const row = html(`<button class="world-row${isOpen ? ' open' : ''}" style="--c:${zoneColor(zone)}" aria-expanded="${isOpen}">
+            <span class="arrow">▾</span><b>${esc(ZONE_INFO[zone].short)}</b>
+            <span class="count">${done === ids.length ? '✔ ' : ''}${done} מתוך ${ids.length}</span></button>`);
+          row.addEventListener('click', () => {
+            game.audio.play('click');
+            open = isOpen ? null : zone;
+            draw();
+          });
+          list.appendChild(row);
+          if (isOpen) list.appendChild(html(`<div class="tiles">${ids.map((id) => missionTile(game, id)).join('')}</div>`));
+        }
+      };
+      draw();
+      body.appendChild(list);
+      if (!game.touch.enabled) body.appendChild(html('<p class="note">J – פתיחה וסגירה של המשימות</p>'));
     },
   });
 }
@@ -157,8 +223,7 @@ export function openMap(game) {
         const info = ZONE_INFO[id];
         const visited = progress.data.visited[id];
         const r = Math.round(quests.restored(id) * 100);
-        const color = '#' + info.color.toString(16).padStart(6, '0');
-        return `<div class="zone-card${here === id ? ' here' : ''}" style="--c:${color}">
+        return `<div class="zone-card${here === id ? ' here' : ''}" style="--c:${zoneColor(id)}">
           <b>${esc(info.short)}</b>
           ${here === id ? '<span class="tag">אתם כאן</span>' : visited ? '' : '<span class="tag dim">עוד לא ביקרתם</span>'}
           ${id === 'arena' ? '<small>מקום להתאמן</small>' : `<div class="bar small"><i style="width:${r}%"></i></div><small>שיקום: ${r}%</small>`}
