@@ -1,5 +1,5 @@
 {
- "version": "ea87d54f33",
+ "version": "086dac2b03",
  "files": [
   {
    "url": "vendor/three/three.module.min.js",
@@ -277,7 +277,7 @@
    "hash": "4651cb19aaec"
   },
   {
-   "url": "favicon-32x32.png",
+   "url": "assets/icons/favicon-32x32.png",
    "size": 3403,
    "hash": "83897e167dcd"
   },
@@ -363,8 +363,8 @@
   },
   {
    "url": "index.html",
-   "size": 1691,
-   "hash": "eeddbd4ea310"
+   "size": 1717,
+   "hash": "e8d6376829fa"
   },
   {
    "url": "src/missions/hub.js",
@@ -407,14 +407,14 @@
    "hash": "4eac1962f8d0"
   },
   {
+   "url": "site.webmanifest",
+   "size": 452,
+   "hash": "aca1707361d0"
+  },
+  {
    "url": "src/missions/index.js",
    "size": 449,
    "hash": "14e10209b0ab"
-  },
-  {
-   "url": "site.webmanifest",
-   "size": 426,
-   "hash": "18d896f189e0"
   }
  ]
 }

@@ -7,8 +7,10 @@ import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
-const INCLUDE = ['index.html', 'favicon.ico', 'favicon-32x32.png', 'site.webmanifest', 'css', 'src', 'vendor', 'assets'];
+const INCLUDE = ['index.html', 'favicon.ico', 'site.webmanifest', 'css', 'src', 'vendor', 'assets'];
 const IGNORE = /(^|\/)(\.|LICENSE|.*\.txt$|.*\.md$)/;
+// Only used when adding the game to a home screen, so not worth keeping on every device.
+const INSTALL_ONLY = /^assets\/icons\/(apple-touch-icon|icon-\d+)\.png$/;
 
 function walk(path, out) {
   const st = statSync(path);
@@ -16,7 +18,7 @@ function walk(path, out) {
     for (const name of readdirSync(path).sort()) walk(join(path, name), out);
   } else {
     const url = relative(ROOT, path).split(sep).join('/');
-    if (!IGNORE.test(url)) out.push(url);
+    if (!IGNORE.test(url) && !INSTALL_ONLY.test(url)) out.push(url);
   }
   return out;
 }
