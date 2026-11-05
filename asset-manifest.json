@@ -1,5 +1,5 @@
 {
- "version": "933ca5a189",
+ "version": "2b95c1229a",
  "files": [
   {
    "url": "vendor/three/three.module.min.js",
@@ -27,14 +27,14 @@
    "hash": "9f1fdd2374e6"
   },
   {
+   "url": "css/screens.css",
+   "size": 15819,
+   "hash": "c3481db76052"
+  },
+  {
    "url": "src/data/quests.js",
    "size": 13921,
    "hash": "826fbbde8be6"
-  },
-  {
-   "url": "css/screens.css",
-   "size": 13752,
-   "hash": "80da62eb97b8"
   },
   {
    "url": "src/world/zones/energy.js",
@@ -67,6 +67,11 @@
    "hash": "c801b5b73714"
   },
   {
+   "url": "src/Game.js",
+   "size": 11764,
+   "hash": "774b33c93936"
+  },
+  {
    "url": "favicon.ico",
    "size": 11646,
    "hash": "1096d98eb939"
@@ -80,11 +85,6 @@
    "url": "src/player/PlayerController.js",
    "size": 10123,
    "hash": "a1256c5673d9"
-  },
-  {
-   "url": "src/Game.js",
-   "size": 9984,
-   "hash": "f722ec00d4c2"
   },
   {
    "url": "src/world/zones/water.js",
@@ -132,14 +132,14 @@
    "hash": "ee3105a56234"
   },
   {
+   "url": "src/ui/screens.js",
+   "size": 7834,
+   "hash": "9c1bb403bdc2"
+  },
+  {
    "url": "src/boot.js",
    "size": 7234,
    "hash": "c2f9943dc1ee"
-  },
-  {
-   "url": "src/ui/screens.js",
-   "size": 7123,
-   "hash": "3f689ecce2ce"
   },
   {
    "url": "src/systems/NPCSystem.js",
@@ -167,6 +167,11 @@
    "hash": "6b59d7ae7448"
   },
   {
+   "url": "src/systems/ProgressManager.js",
+   "size": 5453,
+   "hash": "a4b51e078fe6"
+  },
+  {
    "url": "src/world/Fruit.js",
    "size": 5366,
    "hash": "4c594c8716ff"
@@ -180,6 +185,11 @@
    "url": "src/systems/Pickups.js",
    "size": 5250,
    "hash": "f746e8fc0ed8"
+  },
+  {
+   "url": "src/ui/PlayersScreen.js",
+   "size": 5220,
+   "hash": "fa3dc4a7979c"
   },
   {
    "url": "css/main.css",
@@ -253,8 +263,8 @@
   },
   {
    "url": "src/ui/CharacterSelect.js",
-   "size": 3711,
-   "hash": "2d8523cb6138"
+   "size": 3866,
+   "hash": "eef068b63e76"
   },
   {
    "url": "src/ui/Story.js",
@@ -297,6 +307,11 @@
    "hash": "7c37bd9470e5"
   },
   {
+   "url": "src/ui/MainMenu.js",
+   "size": 2640,
+   "hash": "bc9a99bf1bb2"
+  },
+  {
    "url": "src/data/achievements.js",
    "size": 2579,
    "hash": "7a7bb82e01c7"
@@ -305,11 +320,6 @@
    "url": "src/core/Quality.js",
    "size": 2507,
    "hash": "e845c721b10b"
-  },
-  {
-   "url": "src/ui/MainMenu.js",
-   "size": 2335,
-   "hash": "85281fe00d55"
   },
   {
    "url": "src/systems/Effects.js",
@@ -345,11 +355,6 @@
    "url": "src/minigames/Shop.js",
    "size": 1895,
    "hash": "cecd82d9caac"
-  },
-  {
-   "url": "src/systems/ProgressManager.js",
-   "size": 1820,
-   "hash": "4c841960a6b1"
   },
   {
    "url": "index.html",

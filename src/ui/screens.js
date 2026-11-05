@@ -34,9 +34,22 @@ export function openSettings(game) {
         draw();
         body.appendChild(b);
       }
+      const rename = html('<button class="btn ghost">שינוי שם</button>');
+      rename.addEventListener('click', () => {
+        game.audio.play('click');
+        game.askNewName();
+      });
+      const remove = html('<button class="btn ghost danger">מחיקת שחקן</button>');
+      remove.addEventListener('click', () => {
+        game.audio.play('click');
+        // Ask twice so nobody erases a player by accident.
+        if (remove.classList.contains('confirm')) return game.deletePlayer();
+        remove.classList.add('confirm');
+        remove.textContent = `בטוחים? השחקן ${game.progress.data.name} יימחק עם כל ההתקדמות. לחצו שוב`;
+      });
       const done = html('<button class="btn big">סיימתי</button>');
       done.addEventListener('click', () => close());
-      body.appendChild(done);
+      body.append(rename, remove, done);
     },
   });
 }

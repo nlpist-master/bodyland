@@ -1,7 +1,7 @@
 // Service Worker: keeps every game file on the device so later visits load
 // instantly and the game never needs the network while playing.
 // VERSION is stamped by tools/build-manifest.mjs.
-const VERSION = '933ca5a189';
+const VERSION = '2b95c1229a';
 const CACHE = 'bq-' + VERSION;
 
 async function copyOrFetch(cache, file) {

@@ -4,6 +4,7 @@ import { createCharacter } from '../characters/CharacterBuilder.js';
 // Character select: three children on podiums, cards below.
 // Cards are right-to-left, matching the characters from right to left on screen.
 const hex = (n) => '#' + n.toString(16).padStart(6, '0');
+export const cardColor = (def) => hex(def.shirt === 0xffffff ? def.bag : def.shirt);
 
 export class CharacterSelect {
   constructor(game) {
@@ -34,7 +35,7 @@ export class CharacterSelect {
         <div class="select-cards">
           ${CHARACTERS.map((d, i) => `
             <button class="card" data-i="${i}">
-              <span class="card-dot" style="--c:${hex(d.shirt === 0xffffff ? d.bag : d.shirt)}"></span>
+              <span class="card-dot" style="--c:${cardColor(d)}"></span>
               <b>${d.name}</b><small>${d.blurb}</small>
             </button>`).join('')}
         </div>
@@ -70,6 +71,10 @@ export class CharacterSelect {
     this.index = (i + CHARACTERS.length) % CHARACTERS.length;
     this.el.querySelectorAll('.card').forEach((c, j) => c.classList.toggle('sel', j === this.index));
     if (!silent) this.game.audio.play('select');
+  }
+
+  highlight(id) {
+    this.select(Math.max(0, CHARACTERS.findIndex((d) => d.id === id)), true);
   }
 
   confirm() {

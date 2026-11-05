@@ -253,3 +253,31 @@
 .badge.on { opacity: 1; filter: none; background: rgba(255, 210, 63, 0.18); border: 2px solid var(--yellow); }
 .badge b { font-size: 14px; }
 .badge small { font-size: 12px; opacity: 0.85; }
+
+/* Who is playing */
+.players-screen.asking { justify-content: flex-start; padding-top: calc(clamp(12px, 12vh, 110px) + var(--safe-t)); }
+.players-pick, .players-ask { display: flex; flex-direction: column; align-items: center; gap: 12px; width: min(620px, 100%); max-height: 100%; min-height: 0; }
+.players-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; width: 100%; min-height: 0; padding: 4px; overflow-y: auto; touch-action: pan-y; }
+.player-card { flex: none; min-width: 0; }
+.player-card b { max-width: 100%; font-size: 19px; overflow-wrap: anywhere; }
+.player-card .card-dot { background: var(--c, rgba(255, 255, 255, 0.35)); }
+.players-count { font-size: 15px; opacity: 0.85; }
+.players-full { margin: 0; text-align: center; line-height: 1.5; color: var(--yellow); }
+.players-ask { width: min(420px, 100%); }
+.players-ask .select-title { text-align: center; }
+.players-ask .row { display: flex; gap: 10px; align-items: center; justify-content: center; }
+.ask-note { margin: 0; text-align: center; font-size: 17px; }
+.ask-note:empty, .ask-error:empty { display: none; }
+.ask-error { margin: 0; text-align: center; font: 700 16px var(--font); color: var(--yellow); }
+.name-input { width: 100%; padding: 12px 16px; border: 4px solid rgba(255, 255, 255, 0.5); border-radius: 18px; background: var(--white); color: var(--bg); font: 700 22px var(--font); text-align: center; outline: none; touch-action: manipulation; user-select: text; -webkit-user-select: text; pointer-events: auto; }
+.name-input:focus { border-color: var(--yellow); }
+.menu-btns .row .btn.small { padding: 11px 6px; min-width: 0; }
+@media (max-height: 500px) {
+  .players-pick { gap: 6px; }
+  .players-pick .select-title, .players-ask .select-title { font-size: 21px; }
+  .players-screen.asking { padding-top: calc(8px + var(--safe-t)); }
+  .players-ask { gap: 6px; }
+  .players-pick .btn.big, .players-ask .btn.big { font-size: 18px; padding: 8px 20px; }
+  .player-card { padding: 5px; }
+  .name-input { padding: 6px 12px; font-size: 19px; }
+}

@@ -24,11 +24,13 @@ import { ProgressManager } from './systems/ProgressManager.js';
 import { UIManager } from './ui/UIManager.js';
 import { TouchControls } from './ui/TouchControls.js';
 import { CharacterSelect } from './ui/CharacterSelect.js';
+import { PlayersScreen } from './ui/PlayersScreen.js';
 import { CHARACTER_BY_ID } from './data/characters.js';
 import { ZONE_INFO } from './data/zones.js';
 
 // Wires all systems together and runs the high-level game states:
-// 'menu' (opening screen), 'select' (character select), 'loading' and 'play'.
+// 'players' (who is playing), 'menu' (that child's menu), 'select' (character
+// select), 'loading' and 'play'.
 export class Game {
   constructor() {
     this.progress = new ProgressManager();
@@ -51,6 +53,7 @@ export class Game {
     this.cameraCtl = new CameraController(this.engine.camera, this.input, this.collision);
     this.select = new CharacterSelect(this);
     this.menu = new MainMenu(this);
+    this.players = new PlayersScreen(this);
     this.achievements = new Achievements(this);
     this.effects = new Effects(this.engine.scene);
     this.player = null;
@@ -72,19 +75,89 @@ export class Game {
   }
 
   async init(boot) {
-    this.achievements.check(true);
-    this.openMenu();
+    this.openPlayers();
     boot.progress(0.5, 'מכין את הדמויות...');
     this.engine.compile();
     this.engine.start();
   }
 
-  /** The opening screen, over the character podiums. */
-  openMenu() {
-    this.openCharacterSelect();
+  /** The opening screen: choose who is playing, over the character podiums. */
+  openPlayers() {
+    if (!this.select.active) this.openCharacterSelect();
+    this.menu.hide();
+    this.progress.leave();
+    this.state = 'players';
+    this.select.setVisible(false);
+    this.players.show();
+  }
+
+  choosePlayer(id) {
+    if (this.progress.select(id)) this._playerReady();
+    else this.players.show();
+  }
+
+  addPlayer(name) {
+    this.progress.create(name);
+    this._playerReady();
+  }
+
+  adoptOldSave(name) {
+    this.progress.create(name, this.progress.oldSave);
+    this._playerReady();
+  }
+
+  /** A child was chosen: their menu, or the characters if they have none yet. */
+  _playerReady() {
+    this.achievements.check(true);
+    this.ui.refreshSettings();
+    this.ui.hudLogic.refresh();
+    this.players.hide();
+    if (this.menu.hasSave) {
+      this.select.highlight(this.progress.data.character);
+      this._showMenu();
+    } else {
+      this.state = 'select';
+      this.select.highlight('dvori');
+      this.select.setVisible(true);
+    }
+  }
+
+  _showMenu() {
     this.state = 'menu';
     this.select.setVisible(false);
     this.menu.show();
+  }
+
+  /** This child's menu, back from the game. */
+  openMenu() {
+    this.openCharacterSelect();
+    this._showMenu();
+  }
+
+  /** From the settings of the child's menu. */
+  askNewName() {
+    this.panel.close();
+    this.menu.hide();
+    this.state = 'players';
+    const back = () => {
+      this.players.hide();
+      this._showMenu();
+    };
+    this.players.askName({
+      title: 'מה השם החדש?',
+      value: this.progress.data.name,
+      onBack: back,
+      onDone: (name) => {
+        this.progress.rename(name);
+        back();
+      },
+    });
+  }
+
+  deletePlayer() {
+    this.panel.close();
+    this.progress.remove();
+    this.openPlayers();
   }
 
   continueGame() {
@@ -176,7 +249,7 @@ export class Game {
     }
   }
 
-  /** Erase all progress and go back to character select. */
+  /** Erase this child's progress and go back to character select. */
   newGame() {
     this.progress.reset();
     this.ui.refreshSettings();
@@ -231,9 +304,9 @@ export class Game {
 
   update(dt, t) {
     const input = this.input;
-    if (this.state === 'select' || this.state === 'menu') {
+    if (this.state === 'select' || this.state === 'menu' || this.state === 'players') {
       if (this.state === 'menu') this.menu.update();
-      this.select.update(dt, this.state === 'menu');
+      this.select.update(dt, this.state !== 'select');
       this.world.update(dt, t);
     } else if (this.state === 'play') {
       if (input.consume('pause')) {
