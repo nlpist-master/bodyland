@@ -1,5 +1,5 @@
 {
- "version": "086dac2b03",
+ "version": "34134ced10",
  "files": [
   {
    "url": "vendor/three/three.module.min.js",
@@ -363,8 +363,8 @@
   },
   {
    "url": "index.html",
-   "size": 1717,
-   "hash": "e8d6376829fa"
+   "size": 1715,
+   "hash": "12696f5ca895"
   },
   {
    "url": "src/missions/hub.js",
@@ -407,14 +407,14 @@
    "hash": "4eac1962f8d0"
   },
   {
-   "url": "site.webmanifest",
-   "size": 452,
-   "hash": "aca1707361d0"
-  },
-  {
    "url": "src/missions/index.js",
    "size": 449,
    "hash": "14e10209b0ab"
+  },
+  {
+   "url": "site.webmanifest",
+   "size": 448,
+   "hash": "28a0c3c6b23c"
   }
  ]
 }

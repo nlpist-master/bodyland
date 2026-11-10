@@ -82,7 +82,7 @@ server.on('listening', () => {
     .map((i) => i.address)
     .sort((a, b) => rank(a) - rank(b))
     .map((ip) => `http://${ip}:${port}`);
-  console.log('\n  BODY QUEST is running!\n');
+  console.log('\n  BodyLand is running!\n');
   console.log(`  On this computer:  ${local}`);
   for (const url of lan) console.log(`  On your phone (same Wi-Fi):  ${url}`);
   console.log('\n  Close this window to stop the game server.\n');
