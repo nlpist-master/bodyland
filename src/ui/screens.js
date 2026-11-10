@@ -68,11 +68,88 @@ export function openSettings(game, { inGame = false, onClose } = {}) {
           b.lastChild.textContent = `בטוחים? השחקן ${game.progress.data.name} יימחק עם כל ההתקדמות. לחצו שוב`;
         }).lastChild.textContent = 'מחיקת שחקן';
       }
+      add('ghost', 'mail', () => {
+        // Leave settings quietly (no return to pause yet) and come back here after.
+        game.panel.onClose = null;
+        openContact(game, () => openSettings(game, { inGame, onClose }));
+      }).lastChild.textContent = 'צרו קשר';
       const done = html('<button class="btn big">סיימתי</button>');
       done.addEventListener('click', () => close());
       body.appendChild(done);
     },
   });
+}
+
+// Put together only while the game runs, so address-collecting robots that read
+// the code don't find it.
+const contactEmail = () => ['yosef', 'dvir', 'ai'].join('.') + '@' + ['gmail', 'com'].join('.');
+
+const CONTACT_TOPICS = [
+  { id: 'idea', icon: '💡', label: 'יש לי רעיון', subject: 'רעיון', body: 'שלום יוסף,\nיש לי רעיון למשחק:\n\n' },
+  { id: 'bug', icon: '🐞', label: 'משהו לא עובד', subject: 'משהו לא עובד', body: 'שלום יוסף,\nמה קרה:\n\nמה עשיתי רגע לפני:\n\n' },
+  { id: 'thanks', icon: '❤️', label: 'רציתי להגיד תודה', subject: 'תודה', body: 'שלום יוסף,\n\n' },
+  { id: 'work', icon: '💼', label: 'הזמנת עבודה', note: 'למבוגרים', subject: 'הזמנת עבודה', body: 'שלום יוסף,\nראיתי את BodyLand ואשמח לדבר על פרויקט:\n\n' },
+];
+
+/** A few lines about the device and the place in the game, for bug reports. */
+function deviceInfo(game) {
+  const data = game.progress.data;
+  const lines = [
+    `מכשיר: ${navigator.userAgent}`,
+    `מסך: ${innerWidth}×${innerHeight}`,
+  ];
+  if (data?.zone && ZONE_INFO[data.zone]) lines.push(`מקום במשחק: ${ZONE_INFO[data.zone].short}`);
+  if (data?.settings) lines.push(`גרפיקה: ${QUALITY_NAMES[data.settings.quality]}`);
+  return '\n\n-----\nפרטים טכניים (עוזרים לי לתקן):\n' + lines.join('\n');
+}
+
+/** Write to Yosef: four kinds of email, ready to send, plus the address to copy. */
+export function openContact(game, onClose) {
+  game.panel.open({
+    title: 'צרו קשר',
+    kind: 'contact',
+    onClose,
+    render(body) {
+      const email = contactEmail();
+      body.appendChild(html('<p class="intro contact-intro">אשמח לשמוע מכם! בחרו על מה תרצו לכתוב, וייפתח מייל מוכן. ילדים? כדאי לכתוב יחד עם הורה 🙂</p>'));
+      const grid = html('<div class="contact-grid"></div>');
+      for (const t of CONTACT_TOPICS) {
+        const note = t.note ? `<small>${esc(t.note)}</small>` : '';
+        const b = html(`<button class="btn alt contact-btn"><span class="ico">${t.icon}</span><b>${esc(t.label)}</b>${note}</button>`);
+        b.addEventListener('click', () => {
+          game.audio.play('click');
+          const text = t.body + (t.id === 'bug' ? deviceInfo(game) : '');
+          location.href = `mailto:${email}?subject=${encodeURIComponent('BodyLand – ' + t.subject)}&body=${encodeURIComponent(text)}`;
+        });
+        grid.appendChild(b);
+      }
+      body.appendChild(grid);
+      const copy = html(`<div class="contact-copy"><span>אם לא נפתח מייל, אפשר לכתוב לכתובת:</span><div class="row"><b dir="ltr">${esc(email)}</b><button class="btn small ghost">העתקה</button></div></div>`);
+      const copyBtn = copy.querySelector('button');
+      copyBtn.addEventListener('click', async () => {
+        game.audio.play('click');
+        try {
+          await navigator.clipboard.writeText(email);
+          copyBtn.textContent = 'הועתק ✔';
+        } catch {
+          // No clipboard access: select the address so it can be copied by hand.
+          getSelection().selectAllChildren(copy.querySelector('b'));
+        }
+      });
+      body.appendChild(copy);
+    },
+  });
+}
+
+/** "Made with love" line at the bottom of the opening screens. */
+export function creditLine(game) {
+  const el = html('<div class="credit">נבנה באהבה ❤️ על ידי יוסף דביר · <button class="credit-link">צרו קשר</button></div>');
+  el.querySelector('button').addEventListener('click', (e) => {
+    e.currentTarget.blur();
+    game.audio.play('click');
+    openContact(game);
+  });
+  return el;
 }
 
 export function openAchievements(game, onClose) {

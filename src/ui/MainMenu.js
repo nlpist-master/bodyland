@@ -1,7 +1,8 @@
 import { CHARACTER_BY_ID } from '../data/characters.js';
-import { openSettings, openAchievements } from './screens.js';
+import { ICONS } from './icons.js';
+import { openSettings, openAchievements, openContact, creditLine } from './screens.js';
 
-// One child's menu: continue, new game, settings and achievements, over the
+// One child's menu: continue, new game, settings, achievements and contact, over the
 // three characters on their podiums.
 export class MainMenu {
   constructor(game) {
@@ -14,12 +15,14 @@ export class MainMenu {
       <div class="menu-btns">
         <button class="btn big" data-m="continue">ממשיכים לשחק</button>
         <button class="btn big" data-m="new"></button>
-        <div class="row">
-          <button class="btn small ghost" data-m="settings">הגדרות</button>
-          <button class="btn small ghost" data-m="achievements">הישגים</button>
-          <button class="btn small ghost" data-m="players">החלפת שחקן</button>
+        <div class="row menu-grid">
+          <button class="btn small ghost" data-m="settings">${ICONS.gear}<span>הגדרות</span></button>
+          <button class="btn small ghost" data-m="achievements">${ICONS.medal}<span>הישגים</span></button>
+          <button class="btn small ghost" data-m="players">${ICONS.person}<span>החלפת שחקן</span></button>
+          <button class="btn small ghost" data-m="contact">${ICONS.mail}<span>צרו קשר</span></button>
         </div>
       </div>`;
+    el.appendChild(creditLine(game));
     document.getElementById('ui').appendChild(el);
     this.continueBtn = el.querySelector('[data-m="continue"]');
     this.newBtn = el.querySelector('[data-m="new"]');
@@ -58,6 +61,7 @@ export class MainMenu {
     else if (what === 'settings') openSettings(game);
     else if (what === 'achievements') openAchievements(game);
     else if (what === 'players') game.openPlayers();
+    else if (what === 'contact') openContact(game);
     else if (!this.hasSave || this.confirming) game.newGame();
     else {
       // Ask twice so nobody erases their progress by accident.

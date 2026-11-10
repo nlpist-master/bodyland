@@ -1,6 +1,7 @@
 import { CHARACTER_BY_ID } from '../data/characters.js';
 import { MAX_PLAYERS, MAX_NAME, cleanName } from '../systems/ProgressManager.js';
 import { cardColor } from './CharacterSelect.js';
+import { creditLine } from './screens.js';
 
 // "Who is playing today?": a card for every child, and the screen that asks
 // for a name.
@@ -27,6 +28,7 @@ export class PlayersScreen {
           <button class="btn ghost ask-back" type="button">חזרה</button>
         </div>
       </form>`;
+    el.appendChild(creditLine(game));
     document.getElementById('ui').appendChild(el);
     this.pick = el.querySelector('.players-pick');
     this.grid = el.querySelector('.players-grid');

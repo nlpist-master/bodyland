@@ -1,10 +1,15 @@
 {
- "version": "91255e2a5e",
+ "version": "f7060eb1f9",
  "files": [
   {
    "url": "vendor/three/three.module.min.js",
    "size": 691648,
    "hash": "512c8b83df15"
+  },
+  {
+   "url": "css/screens.css",
+   "size": 19299,
+   "hash": "a54e14b29586"
   },
   {
    "url": "assets/fonts/rubik-latin-500-normal.woff2",
@@ -22,14 +27,14 @@
    "hash": "65bc8c65415d"
   },
   {
-   "url": "css/screens.css",
-   "size": 17536,
-   "hash": "676142e20ade"
-  },
-  {
    "url": "src/characters/NPCs.js",
    "size": 16053,
    "hash": "9f1fdd2374e6"
+  },
+  {
+   "url": "src/ui/screens.js",
+   "size": 15351,
+   "hash": "f0928b1e2161"
   },
   {
    "url": "src/data/quests.js",
@@ -75,11 +80,6 @@
    "url": "favicon.ico",
    "size": 11646,
    "hash": "1096d98eb939"
-  },
-  {
-   "url": "src/ui/screens.js",
-   "size": 11271,
-   "hash": "14b439c1fc0b"
   },
   {
    "url": "src/world/zones/hub.js",
@@ -177,6 +177,11 @@
    "hash": "4c594c8716ff"
   },
   {
+   "url": "src/ui/PlayersScreen.js",
+   "size": 5301,
+   "hash": "14db861226c0"
+  },
+  {
    "url": "src/ui/Minimap.js",
    "size": 5286,
    "hash": "4de5a9b981e5"
@@ -185,11 +190,6 @@
    "url": "src/systems/Pickups.js",
    "size": 5250,
    "hash": "f746e8fc0ed8"
-  },
-  {
-   "url": "src/ui/PlayersScreen.js",
-   "size": 5220,
-   "hash": "fa3dc4a7979c"
   },
   {
    "url": "css/main.css",
@@ -297,6 +297,11 @@
    "hash": "a24d3a55dd8d"
   },
   {
+   "url": "src/ui/MainMenu.js",
+   "size": 2998,
+   "hash": "10355ca1a51e"
+  },
+  {
    "url": "src/missions/life.js",
    "size": 2924,
    "hash": "6896b49c5fbf"
@@ -312,11 +317,6 @@
    "hash": "ecee76735045"
   },
   {
-   "url": "src/ui/MainMenu.js",
-   "size": 2639,
-   "hash": "65f277df1c8d"
-  },
-  {
    "url": "src/core/Quality.js",
    "size": 2507,
    "hash": "e845c721b10b"
@@ -327,14 +327,14 @@
    "hash": "612a0df188d4"
   },
   {
+   "url": "src/ui/icons.js",
+   "size": 2247,
+   "hash": "0c89be4b954c"
+  },
+  {
    "url": "src/missions/helpers.js",
    "size": 2221,
    "hash": "417188050a21"
-  },
-  {
-   "url": "src/ui/icons.js",
-   "size": 2155,
-   "hash": "c71a42fd35d7"
   },
   {
    "url": "src/minigames/Workshop.js",
