@@ -11,6 +11,8 @@ const INCLUDE = ['index.html', 'favicon.ico', 'site.webmanifest', 'css', 'src', 
 const IGNORE = /(^|\/)(\.|LICENSE|.*\.txt$|.*\.md$)/;
 // Only used when adding the game to a home screen, so not worth keeping on every device.
 const INSTALL_ONLY = /^assets\/icons\/(apple-touch-icon|icon-\d+)\.png$/;
+// Only fetched by WhatsApp/Facebook/X for link previews, never by the game.
+const SHARE_ONLY = /^assets\/social\//;
 
 function walk(path, out) {
   const st = statSync(path);
@@ -18,7 +20,7 @@ function walk(path, out) {
     for (const name of readdirSync(path).sort()) walk(join(path, name), out);
   } else {
     const url = relative(ROOT, path).split(sep).join('/');
-    if (!IGNORE.test(url) && !INSTALL_ONLY.test(url)) out.push(url);
+    if (!IGNORE.test(url) && !INSTALL_ONLY.test(url) && !SHARE_ONLY.test(url)) out.push(url);
   }
   return out;
 }

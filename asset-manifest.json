@@ -1,5 +1,5 @@
 {
- "version": "f7060eb1f9",
+ "version": "e5d7df532b",
  "files": [
   {
    "url": "vendor/three/three.module.min.js",
@@ -252,6 +252,11 @@
    "hash": "9ad2387d9050"
   },
   {
+   "url": "index.html",
+   "size": 3966,
+   "hash": "d559df98d8a1"
+  },
+  {
    "url": "src/ui/TouchControls.js",
    "size": 3965,
    "hash": "caa0411e8d4b"
@@ -345,11 +350,6 @@
    "url": "src/systems/InteractionSystem.js",
    "size": 2067,
    "hash": "6f2a469d5a88"
-  },
-  {
-   "url": "index.html",
-   "size": 2051,
-   "hash": "92cc13c9b673"
   },
   {
    "url": "src/ui/Panel.js",
