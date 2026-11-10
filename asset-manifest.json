@@ -1,5 +1,5 @@
 {
- "version": "b3c08ab50c",
+ "version": "91255e2a5e",
  "files": [
   {
    "url": "vendor/three/three.module.min.js",
@@ -347,6 +347,11 @@
    "hash": "6f2a469d5a88"
   },
   {
+   "url": "index.html",
+   "size": 2051,
+   "hash": "92cc13c9b673"
+  },
+  {
    "url": "src/ui/Panel.js",
    "size": 1953,
    "hash": "de1da97f0d63"
@@ -360,11 +365,6 @@
    "url": "src/minigames/Shop.js",
    "size": 1895,
    "hash": "cecd82d9caac"
-  },
-  {
-   "url": "index.html",
-   "size": 1714,
-   "hash": "8988e1ff42e7"
   },
   {
    "url": "src/missions/hub.js",

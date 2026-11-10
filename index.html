@@ -33,5 +33,14 @@
 
   <noscript><div class="screen loading"><p>כדי לשחק צריך להפעיל JavaScript בדפדפן.</p></div></noscript>
   <script src="src/boot.js"></script>
+  <script>
+    // Vercel Web Analytics: counts visits on the live site only, not on this computer.
+    if (!/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {
+      var va = document.createElement('script');
+      va.defer = true;
+      va.src = '/_vercel/insights/script.js';
+      document.head.appendChild(va);
+    }
+  </script>
 </body>
 </html>
