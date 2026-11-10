@@ -9,7 +9,7 @@ export class MainMenu {
     const el = (this.el = document.createElement('div'));
     el.className = 'menu-screen hidden';
     el.innerHTML = `
-      <div class="logo" dir="ltr">BODY<span>QUEST</span></div>
+      <div class="logo" dir="ltr">BODY<span>LAND</span></div>
       <div class="tagline menu-hello"></div>
       <div class="menu-btns">
         <button class="btn big" data-m="continue">ממשיכים לשחק</button>

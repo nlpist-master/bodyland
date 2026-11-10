@@ -1,5 +1,5 @@
 {
- "version": "34134ced10",
+ "version": "460487d86c",
  "files": [
   {
    "url": "vendor/three/three.module.min.js",
@@ -313,8 +313,8 @@
   },
   {
    "url": "src/ui/MainMenu.js",
-   "size": 2640,
-   "hash": "bc9a99bf1bb2"
+   "size": 2639,
+   "hash": "65f277df1c8d"
   },
   {
    "url": "src/core/Quality.js",
@@ -363,8 +363,8 @@
   },
   {
    "url": "index.html",
-   "size": 1715,
-   "hash": "12696f5ca895"
+   "size": 1714,
+   "hash": "8988e1ff42e7"
   },
   {
    "url": "src/missions/hub.js",
