@@ -1,8 +1,8 @@
 // Service Worker: keeps every game file on the device so later visits load
 // instantly and the game never needs the network while playing.
 // VERSION is stamped by tools/build-manifest.mjs.
-const VERSION = '460487d86c';
-const CACHE = 'bq-' + VERSION;
+const VERSION = 'b3c08ab50c';
+const CACHE = 'bl-' + VERSION;
 
 async function copyOrFetch(cache, file) {
   const have = await cache.match(file.url);
@@ -34,7 +34,8 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
     for (const name of await caches.keys()) {
-      if (name.startsWith('bq-') && name !== CACHE) await caches.delete(name);
+      // bq- caches are left from when the game was called Body Quest.
+      if ((name.startsWith('bl-') || name.startsWith('bq-')) && name !== CACHE) await caches.delete(name);
     }
     await self.clients.claim();
   })());

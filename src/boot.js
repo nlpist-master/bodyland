@@ -106,7 +106,7 @@
   function openCache() {
     var controlled = useSW && navigator.serviceWorker.controller;
     if (!useSW || controlled || !window.caches) return Promise.resolve(null);
-    return caches.open('bq-' + manifest.version).catch(function () { return null; });
+    return caches.open('bl-' + manifest.version).catch(function () { return null; });
   }
 
   function registerSW() {
@@ -125,7 +125,7 @@
   // download the new version (showing real progress), then reload once.
   function needsUpdate(m) {
     if (!useSW || !navigator.serviceWorker.controller || !window.caches) return Promise.resolve(false);
-    return caches.has('bq-' + m.version).then(function (has) { return !has; });
+    return caches.has('bl-' + m.version).then(function (has) { return !has; });
   }
 
   function waitForUpdate(m) {
@@ -139,7 +139,7 @@
         else navigator.serviceWorker.register('sw.js').catch(reject);
       });
       var poll = setInterval(function () {
-        caches.open('bq-' + m.version).then(function (c) { return c.keys(); }).then(function (keys) {
+        caches.open('bl-' + m.version).then(function (c) { return c.keys(); }).then(function (keys) {
           if (keys.length !== last) {
             last = keys.length;
             lastChange = Date.now();

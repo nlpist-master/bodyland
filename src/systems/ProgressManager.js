@@ -1,9 +1,9 @@
 // Saves progress on this device (localStorage). No accounts, no server.
 // Every child has a save of their own, found by its key. Graphics and sound
 // belong to the device; steering belongs to the child.
-const OLD_KEY = 'bodyquest.save'; // the single save from before players; kept, only read
-const DEVICE_KEY = 'bodyquest.device';
-const PLAYER_PREFIX = 'bodyquest.player.';
+const OLD_KEY = 'bodyland.save'; // the single save from before players; kept, only read
+const DEVICE_KEY = 'bodyland.device';
+const PLAYER_PREFIX = 'bodyland.player.';
 const VERSION = 1;
 export const MAX_PLAYERS = 20;
 export const MAX_NAME = 14;

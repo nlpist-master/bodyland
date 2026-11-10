@@ -1,5 +1,5 @@
 {
- "version": "460487d86c",
+ "version": "b3c08ab50c",
  "files": [
   {
    "url": "vendor/three/three.module.min.js",
@@ -139,7 +139,7 @@
   {
    "url": "src/boot.js",
    "size": 7234,
-   "hash": "c2f9943dc1ee"
+   "hash": "c696fd328feb"
   },
   {
    "url": "src/systems/NPCSystem.js",
@@ -168,8 +168,8 @@
   },
   {
    "url": "src/systems/ProgressManager.js",
-   "size": 5453,
-   "hash": "a4b51e078fe6"
+   "size": 5450,
+   "hash": "677654a0c5eb"
   },
   {
    "url": "src/world/Fruit.js",
